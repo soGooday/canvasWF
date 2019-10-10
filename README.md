@@ -1,6 +1,13 @@
 #使用
 记得下载下来的第一件事就是 npm install
 
+# 只想使用以及极其简单的webpack
+  建工程下载下来后 在src/index.js中 删除 后载src下重新创建一个index.js 同时将下面的赋值粘贴放在这个idnex.js里面
+  
+  import "./index.css"; 
+  import $ from 'zepto-webpack'
+  import "./js/zeptoFx.js"
+
 # canvasWJ
 ##话语
 这是一个人个人的项目，想让cnavas的使用标签一样便捷。这最终的目的，前期会考虑使用想cocosCreator与unity一样的组件化开发（实际上已经开发了大半了，整理后慢慢放出来，但是目前使用的是phaser,相似的加载方式），但是他的功能会比较基础.
