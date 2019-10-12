@@ -2,13 +2,13 @@
 记得下载下来的第一件事就是 npm install
 
 # 只想使用以及极其简单的webpack
-  建工程下载下来后 在src/index.js中 删除 后载src下重新创建一个index.js 同时将下面的赋值粘贴放在这个idnex.js里面
+  > 建工程下载下来后 在src/index.js中 删除 后载src下重新创建一个index.js 同时将下面的赋值粘贴放在这个idnex.js里面
   
-  > import "./index.css"; 
+  >> import "./index.css"; 
   
-  如果你想使用zepto 及其动画 就是再加上下面的引用
-  >import $ from 'zepto-webpack'
-  >import "./js/zeptoFx.js"
+  >如果你想使用zepto 及其动画 就是再加上下面的引用
+  >> `import $ from 'zepto-webpack'`
+  >> `import "./js/zeptoFx.js"`
 
 # canvasWJ
 ## 话语
