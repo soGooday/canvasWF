@@ -25,5 +25,6 @@
 >canvas
 >>1-提升渲染的效率 添加了离屏cnavas
 >>2-同时剔除canvasWF对zepto的依赖
+
 >webpack
->>增加webpack对scss的支持  --方便接下来的编写案例页面使用
+>>1-增加webpack对scss的支持  --方便接下来的编写案例页面使用
