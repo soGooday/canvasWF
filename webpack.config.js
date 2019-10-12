@@ -25,13 +25,13 @@ module.exports = {
           // sourcMap: true//使用源映射将错误消息位置映射到模块（这会减慢编译速度）
           // }
         ),
-      //   new CopyWebpackPlugin([
-      //     {
-      //       from: './src/images',
-      //       to: './images',
-      //       ignore: ['.*']
-      //     }
-      // ])
+        new CopyWebpackPlugin([//拷贝图片到生成的目录之下
+          {
+            from: './src/images',
+            to: './images',
+            ignore: ['.*']
+          }
+      ])
     ],
     module: {
       rules: [

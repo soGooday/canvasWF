@@ -87,16 +87,11 @@ export class Game{
 
         this.drawCanvas.width = this.drawCanvas.getBoundingClientRect().width*2;
         this.drawCanvas.height = this.drawCanvas.getBoundingClientRect().height*2;
-     
-        // console.log('当前的宽高',this.canvas.width,this.canvas.height);
-             //储存起来相应数组 备用
+      
         gameInfo.sceneW = this.canvas.width;
         gameInfo.sceneH = this.canvas.height;
     }
-
-    showA(){
-        console.log('drawCanvas:',this.drawCanvas,'this.canvas:',this.canvas);
-    }
+ 
     /**
      *阻止手机端的制动
      */

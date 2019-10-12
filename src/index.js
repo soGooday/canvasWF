@@ -28,7 +28,8 @@ class fruitMachines   {
         this.Bg = new SingleObj(0,0,'bgIamge');//创建一个单一游戏体的背景图片
 
   
-        this.game.setCanvasWH();//设置canvas的宽高 === css 中canvas的宽高
+        // this.game.setCanvasWH();//设置canvas的宽高 === css 中canvas的宽高
+        this.game.showCanvasWH();
         this.updata();//资源更新加载
     }
     //函数更新
