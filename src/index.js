@@ -1,5 +1,7 @@
-import "./index.css"; 
-import $ from '../node_modules/zepto-webpack'
+import "./scss/rem.scss"
+import "./index.scss"; 
+
+// import $ from '../node_modules/zepto-webpack'
 // import "./js/zeptoFx.js"
  
  
@@ -27,7 +29,12 @@ class fruitMachines   {
     create(){ 
         this.Bg = new SingleObj(0,0,'bgIamge');//创建一个单一游戏体的背景图片
 
-  
+        this.Bg.addEventClick(()=>{
+            console.log('点击了按钮的事件')
+        })
+        this.Bg.addEventUp(()=>{
+            console.log('抬起了按钮的事件')
+        })
         // this.game.setCanvasWH();//设置canvas的宽高 === css 中canvas的宽高
         this.game.showCanvasWH();
         this.updata();//资源更新加载

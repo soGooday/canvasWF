@@ -13,11 +13,13 @@ export let gameInfo={
     waringLogo:'m( =∩ω∩= )m:',//提示的标题
     sceneW:0,
     sceneH:0,
-    canvas:null,
+    canvas:null,//离屏canvas
     canvasId:'fruitMachinesCanvas',
     FindCanvas:'#fruitMachinesCanvas',
     content:null,
     indexSpritiID:0,//创造出来的精灵的id
+    drawCanvas:null,//渲染canvas
+    drawContent:null,
 };
 export class Game{
     //初始化相关的信息
@@ -33,9 +35,7 @@ export class Game{
         gameInfo.showGroupObjSet = new Set();
         gameInfo.eventFunMap = new Map();//事件的方法
 
-        //接收到canvas
-        // this.canvas = document.getElementById(gameInfo.canvasId);
-        // this.content = this.canvas.getContext('2d');
+    
 
         this.canvas = document.createElement('canvas');
         this.content = this.canvas.getContext('2d');
@@ -50,7 +50,8 @@ export class Game{
         gameInfo.canvas = this.canvas;
         gameInfo.content = this.content;
 
- 
+        gameInfo.drawCanvas = this.drawCanvas;
+        gameInfo.drawContent = this.drawContent;
 
         //之所以使用这个的原因是会出现取到的canvas的相关参数this.canvas.getBoundingClientRect().width与height的高度不是最后加载好的DOM数据 这样导致出现了canvas的适配出现了问题
         //dom构建完毕之后调取这个  要不然适配会出现问题
@@ -95,10 +96,15 @@ export class Game{
     /**
      *阻止手机端的制动
      */
-    preventDefault(){
-        $(gameInfo.FindCanvas).on('touchmove',  event => {
+    preventDefault(){ 
+
+        gameInfo.drawCanvas.addEventListener('touchmove',event=>{
             event.preventDefault();
         });
+
+        // $(gameInfo.FindCanvas).on('touchmove',  event => {
+        //     event.preventDefault();
+        // });
     }
     /**
      * 加载的是资源 放进去的是Set  这个是加载第一步

@@ -1,0 +1,29 @@
+
+ @import './scss/rem.scss';
+ 
+ @function ax($px) {
+    @if type-of($px) ==number {
+      @return $px/40 + rem;
+    } @else {
+      @return $px;
+    }
+  }
+  @mixin aWHU($width, $height) {
+    width: ax($width);
+    height: ax($height);
+  }
+  @mixin setBg($imageName) {
+    background-image: url($imageName);
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+#fruitMachinesCanvas{
+    width: 18.75rem;
+    height: 33.375rem;
+    // @include aWHU(750.1335)
+    
+}
+ 
+
+ 

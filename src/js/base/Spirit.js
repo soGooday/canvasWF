@@ -70,10 +70,7 @@ export class Spirit extends Behaviour{
         this.imageH = this.img.height*this.SpiritInfo.imageScaleNum;//高
         this.alphaNum = 1;
 
-
-        // console.log('当前的图片的宽高：',this.img.width,this.img.height)
-        // gameInfo.canvas.width = this.img.width;
-        // gameInfo.canvas.height = this.img.height;
+ 
 
 
         this.scale(1,1);//
@@ -498,8 +495,8 @@ export class Spirit extends Behaviour{
      * @param BACKFUN 回调函数
      */
     addEventClick(BACKFUN){
-        gameInfo.canvas.addEventListener('click',e=>{
-            if(this.isClick(this.getPoint(gameInfo.canvas,e)) === true){
+        gameInfo.drawCanvas.addEventListener('click',e=>{
+            if(this.isClick(this.getPoint(gameInfo.drawCanvas,e)) === true){
                 BACKFUN();
             }
         },false);
@@ -523,12 +520,16 @@ export class Spirit extends Behaviour{
      * @param BACKFUN 回调函数
      */
     addEventDown(BACKFUN){
-
-        $(gameInfo.FindCanvas).on('touchstart',  (event) => {
-            if(this.isClick(this.getPoint(gameInfo.canvas,event.changedTouches[event.changedTouches.length-1])) === true){
+        gameInfo.drawCanvas.addEventListener('touchstart', (event) => {
+            if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
                 BACKFUN();
             }
-        });
+        }) 
+        // $(gameInfo.FindCanvas).on('touchstart',  (event) => {
+        //     if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
+        //         BACKFUN();
+        //     }
+        // });
 
     }
     /**
@@ -536,12 +537,16 @@ export class Spirit extends Behaviour{
      * @param BACKFUN 回调函数
      */
     addEventUp(BACKFUN){
-
-        $(gameInfo.FindCanvas).on('touchend',  (event) => {
-            if(this.isClick(this.getPoint(gameInfo.canvas,event.changedTouches[event.changedTouches.length-1])) === true){
+        gameInfo.drawCanvas.addEventListener('touchend', (event) => {
+            if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
                 BACKFUN();
             }
-        });
+        }) 
+        // $(gameInfo.FindCanvas).on('touchend',  (event) => {
+        //     if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
+        //         BACKFUN();
+        //     }
+        // });
 
     }
 }

@@ -22,4 +22,8 @@
 ### 2019/10/10
 >之前的是集成在vue上面的，感觉这样并不太好用，所以我就把他重新继承在webpack上,不过我仅仅添加了js的plugin插件的使用。我在后面的开发的时候会继续添加对html与图片压缩的组件，包括其他的webpack的其他的plugin及其loader的添加
 ### 2019/10/12
->提升渲染的效率 添加了离屏cnavas
+>canvas
+>>1-提升渲染的效率 添加了离屏cnavas
+>>2-同时剔除canvasWF对zepto的依赖
+>webpack
+>>增加webpack对scss的支持  --方便接下来的编写案例页面使用
