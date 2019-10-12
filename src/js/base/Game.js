@@ -34,17 +34,23 @@ export class Game{
         gameInfo.eventFunMap = new Map();//事件的方法
 
         //接收到canvas
-        this.canvas = document.getElementById(gameInfo.canvasId);
+        // this.canvas = document.getElementById(gameInfo.canvasId);
+        // this.content = this.canvas.getContext('2d');
+
+        this.canvas = document.createElement('canvas');
         this.content = this.canvas.getContext('2d');
+
+        this.drawCanvas = document.getElementById(gameInfo.canvasId);
+        this.drawContent = this.drawCanvas.getContext('2d');
+        
+
         //设置canvas的宽与高度
         this.setCanvasWH();
         //储存起来相应数组 备用
         gameInfo.canvas = this.canvas;
         gameInfo.content = this.content;
 
-        //储存起来相应数组 备用
-        gameInfo.sceneW = this.canvas.width;
-        gameInfo.sceneH = this.canvas.height;
+ 
 
         //之所以使用这个的原因是会出现取到的canvas的相关参数this.canvas.getBoundingClientRect().width与height的高度不是最后加载好的DOM数据 这样导致出现了canvas的适配出现了问题
         //dom构建完毕之后调取这个  要不然适配会出现问题
@@ -76,13 +82,21 @@ export class Game{
      * 在创建完毕了相应的资源开始绘制前一步加上这个 更新画布 防止适配出现问题
      */
     setCanvasWH(){
-        this.canvas.width = this.canvas.getBoundingClientRect().width*2;
-        this.canvas.height = this.canvas.getBoundingClientRect().height*2;
+        this.canvas.width = this.drawCanvas.getBoundingClientRect().width*2;
+        this.canvas.height = this.drawCanvas.getBoundingClientRect().height*2;
 
+        this.drawCanvas.width = this.drawCanvas.getBoundingClientRect().width*2;
+        this.drawCanvas.height = this.drawCanvas.getBoundingClientRect().height*2;
+     
         // console.log('当前的宽高',this.canvas.width,this.canvas.height);
-
+             //储存起来相应数组 备用
+        gameInfo.sceneW = this.canvas.width;
+        gameInfo.sceneH = this.canvas.height;
     }
 
+    showA(){
+        console.log('drawCanvas:',this.drawCanvas,'this.canvas:',this.canvas);
+    }
     /**
      *阻止手机端的制动
      */
@@ -192,7 +206,10 @@ export class Game{
      * 遍历图片显示出来  然后调取帧动画进行渲染
      */
     drawRes(){
+       
+    
         this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);
+        // this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);
         for (let item  of gameInfo.showImageObjMap.entries()) {//所有的图片
             // console.log('当前的图片:',item[1]);
             item[1].drawResObj();
@@ -203,8 +220,12 @@ export class Game{
         for (let item of gameInfo.eventFunMap.entries()) {//自定义的需要帧更新的
             item[1]();
         }
-
+ 
+        // console.log('canvas:',this.canvas);
+        this.drawContent.drawImage(this.canvas, 0, 0);
+       
     }
+    
 
     /**
      * 创建updata的振更新
@@ -307,7 +328,7 @@ export class Game{
      */
     showCanvasWH(){
         this.showCanvasWH = this.createFont(180,50,'showCanvasWH');//创建一个字体
-        this.showCanvasWH.fontContent('W:'+this.canvas.getBoundingClientRect().width * 2+'  H:'+this.canvas.getBoundingClientRect().height * 2+' drp:'+window.devicePixelRatio);//设置内容
+        this.showCanvasWH.fontContent('W:'+this.drawCanvas.getBoundingClientRect().width * 2+'  H:'+this.drawCanvas.getBoundingClientRect().height * 2+' drp:'+window.devicePixelRatio);//设置内容
         this.showCanvasWH.fontColor('#000000');////设置字体的颜色
         this.showCanvasWH.fontSize(26);//设置字体的大小
     }
