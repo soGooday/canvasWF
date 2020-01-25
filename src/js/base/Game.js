@@ -18,9 +18,12 @@ export let gameInfo={
     FindCanvas:'#fruitMachinesCanvas',
     content:null,
     indexSpritiID:0,//创造出来的精灵的id
+    indexFontID:0,//字体的专属id
     drawCanvas:null,//渲染canvas
     drawContent:null,
 };
+
+
 export class Game{
     //初始化相关的信息
     constructor(){
@@ -206,23 +209,18 @@ export class Game{
     /**
      * 遍历图片显示出来  然后调取帧动画进行渲染
      */
-    drawRes(){
-       
-    
-        this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);
-        // this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);
-        for (let item  of gameInfo.showImageObjMap.entries()) {//所有的图片
-            // console.log('当前的图片:',item[1]);
+    drawRes(){ 
+        this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
+        this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
+        for (let item  of gameInfo.showImageObjMap.entries()) {//渲染所有的图片 
             item[1].drawResObj();
         }
-        for (let item  of gameInfo.showFontObjMap.entries()) {//所有的字体
+        for (let item  of gameInfo.showFontObjMap.entries()) {//渲染所有的字体
             item[1].drawResObj();
         }
-        for (let item of gameInfo.eventFunMap.entries()) {//自定义的需要帧更新的
+        for (let item of gameInfo.eventFunMap.entries()) {//自定义的需要帧更新的方法
             item[1]();
-        }
- 
-        // console.log('canvas:',this.canvas);
+        } 
         this.drawContent.drawImage(this.canvas, 0, 0);
        
     }
@@ -250,8 +248,9 @@ export class Game{
      */
     // eslint-disable-next-line consistent-return
     createFont(positionX,positionY,textKey){
+        gameInfo.indexFontID++;
         if(gameInfo.showFontObjMap.has(textKey) === false){
-            let font_ = new Text(this.content,null);
+            let font_ = new Text(this.content,null,`F${gameInfo.indexFontID}`);
             font_.position(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;
@@ -268,8 +267,9 @@ export class Game{
      * @returns {Text}
      */
     static createFontS(positionX,positionY,textKey){
+        gameInfo.indexFontID++;
         if(gameInfo.showFontObjMap.has(textKey) === false){
-            let font_ = new Text(gameInfo.content,null);//gameInfo.content使用的是这个   而不是this.context
+            let font_ = new Text(gameInfo.content,null,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
             font_.position(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;
@@ -282,6 +282,7 @@ export class Game{
      */
     static addUpdataFun(nameFun,fun){
         gameInfo.eventFunMap.set(nameFun,fun);
+        // content.log('====gameInfo.eventFunMap:', gameInfo.eventFunMap);
 
 
     }
@@ -322,13 +323,21 @@ export class Game{
         new Error(gameInfo.waringLogo,text,content);
 
     }
+    /**
+     * 警告的显示
+     * @param text
+     * @param content
+     */
+    static waringS(text,content){
+        new Error(gameInfo.waringLogo,text,content);
 
+    }
 
     /**
      * 显示设备的相关参数
      */
     showCanvasWH(){
-        this.showCanvasWH = this.createFont(180,50,'showCanvasWH');//创建一个字体
+        this.showCanvasWH = this.createFont(400,50,'showCanvasWH');//创建一个字体
         this.showCanvasWH.fontContent('W:'+this.drawCanvas.getBoundingClientRect().width * 2+'  H:'+this.drawCanvas.getBoundingClientRect().height * 2+' drp:'+window.devicePixelRatio);//设置内容
         this.showCanvasWH.fontColor('#000000');////设置字体的颜色
         this.showCanvasWH.fontSize(26);//设置字体的大小

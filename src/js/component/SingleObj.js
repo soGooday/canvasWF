@@ -15,8 +15,8 @@ export class SingleObj {
         this.transform = Game.createSpriteS(this.positionX,this.positionY,this.spriteKey);
 
         this.spritName = this.transform.spritName;
-        //蛋的移动
-
+        
+        //蛋的移动 
         this.backFun = null;
 
         //放大缩小

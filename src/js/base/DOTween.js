@@ -1,3 +1,17 @@
+import {Game} from './Game'
+
+
+
+
+/**
+ * 当前的动画类型
+ */
+export let loopType = {
+    fromTo:0,//从开始到目标位置
+    toFrom:1,//从目标的位置到初始位置
+    pingqang:2,//开始到结尾，结尾到开始 为一个动画
+    reversePingqang:3,//结尾到开始  开始到结尾 为一个动画
+}
 /*
  * Tween.js
  * t: current time（当前时间）；
@@ -5,8 +19,8 @@
  * c: change in value（变化量）；
  * d: duration（持续时间）。
  * you can visit 'https://www.zhangxinxu.com/study/201612/how-to-use-tween-js.html' to get effect
-*/
-export let TweenFun = {
+*/ 
+export let Ease = {
     Linear(t, b, c, d) { 
         return c * t / d + b; 
     },
@@ -175,87 +189,656 @@ export let TweenFun = {
             
         }
     }
-};
-//类型
-let minType = {
-    easeIn:'easeIn',
-    easeOut: 'easeOut',
-    easeInOut: 'easeInOut',
-};
-export let maxType={
-    Linear:'Linear',
-    Quad:'Quad.easeOut',
-    Cubic: 'Cubic',
-    Quart: 'Quart',
-    Quint:'Quint',
-    Sine:'Sine',
-    Expo:'Expo',
-    Circ:'Circ',
-    Elastic:'Elastic',
-    Back:'Back',
-    Bounce:'Bounce',
+}; 
+/**
+ * 当前组件的信息
+ */
+let componentInfo={
+    constructor:null,//当初实力本组件的原型 
+    self:null,//当前的作用域
+    id:0,//记录当前运动的id的 使用的是这个 下面的未使用
+    moveKey:'moveKey',//当前的动画位移的Key
+    scaleKey:'scaleKey',//当前放大缩小的Key
 }
-//需要引用的类型
-export let DoTweenType={
-    Linear:{
-        easeIn:'Linear.easeIn',
-        easeOut: 'Linear.easeOut',
-        easeInOut: 'Linear.easeInOut',
-    },
-    Quad:{
-        easeIn:'Quad.easeIn',
-        easeOut: 'Quad.easeOut',
-        easeInOut: 'Quad.easeInOut',
-    },
-    Cubic:{
-        easeIn:'Cubic.easeIn',
-        easeOut: 'Cubic.easeOut',
-        easeInOut: 'Cubic.easeInOut',
-    },
-    Quart: {
-        easeIn:'Quart.easeIn',
-        easeOut: 'Quart.easeOut',
-        easeInOut: 'Quart.easeInOut',
-    },
-    Quint:{
-        easeIn:'Quint.easeIn',
-        easeOut: 'Quint.easeOut',
-        easeInOut: 'Quint.easeInOut',
-    },
-    Sine:{
-        easeIn:'Sine.easeIn',
-        easeOut: 'Sine.easeOut',
-        easeInOut: 'Sine.easeInOut',
-    },
-    Expo:{
-        easeIn:'Expo.easeIn',
-        easeOut: 'Expo.easeOut',
-        easeInOut: 'Expo.easeInOut',
-    },
-    Circ:{
-        easeIn:'Circ.easeIn',
-        easeOut: 'Circ.easeOut',
-        easeInOut: 'Circ.easeInOut',
-    },
-    Elastic:{
-        easeIn:'Elastic.easeIn',
-        easeOut: 'Elastic.easeOut',
-        easeInOut: 'Elastic.easeInOut',
-    },
-    Back:{
-        easeIn:'Back.easeIn',
-        easeOut: 'Back.easeOut',
-        easeInOut: 'Back.easeInOut',
-    },
-    Bounce:{
-        easeIn:'Bounce.easeIn',
-        easeOut: 'Bounce.easeOut',
-        easeInOut: 'Bounce.easeInOut',
-    },
-};
-export class DOTWeen {
+export default class DOTween {
+
+    constructor(scope){ 
+        this.TypeNamew = 'DOTweenJS';
+        componentInfo.constructor = scope;//渠道之前的引用的而动画的相关信息
+        componentInfo.self = this;//取到当前的作用域
+        componentInfo.id ++; 
+    }
+    /**
+     * 得当仅仅属于当前动画的以恶个id 因为一个活动可能动画会触发很多活动
+     * @param {string} CONTEXT 
+     */
+    getAnimationID(CONTEXT){
+        componentInfo.id ++;
+        return `${CONTEXT}_${componentInfo.id}`;
+    }
+
+    /**
+     * 动画的帧动画，我们需要把他提出出来放后面的所有关于位移的动画使用
+     * @param {delayedNum:延时函数的参数
+     *         object:需要移动的游戏物体，一定要存在XY轴
+     *         xORy:是轴还是y轴x轴
+     *         easeFun:换帧动画的方法
+     *         startNum:开始是的默认是0
+     *         fromX:出发的地点
+     *         toX:前往的地点 
+     *         useTimeNum:总共使用的时间
+     *         loopsNum:循环的次数
+     *         loopsMode:循环模式
+     *         everyFrameFun:每帧动画的回调
+     *         onCompleteFun:当前动画完成的回调
+     *         singleCompletion:单次完成动画的回调
+     *         isCallback 是不是启动当前的函数所有回调 默认是开启的
+     *         }//当前需要的动画传入的相关参数
+     */
+    updataMoveAmin({delayedNum,object,xORy,easeFun,startNum,from,to,useTimeNum,loopsNum,loopsMode,everyFrameFun,onCompleteFun,singleCompletion,isCallback=true}){
+        let _animationID = this.getAnimationID(componentInfo.moveKey);//得到仅仅属于当前动画的key
+        let _loopsNum = 0;//当前的循环次数 
+        //更换开始与结束的坐标专门使用方法
+        let FROMTO={
+            _to:to,
+            _from:from,
+            fromToFun(){//不更换坐标的位置
+                from = this._from;
+                to = this._to;
+            },
+            toFromFun(){//更换坐标的位置
+                from =this. _to;
+                to = this._from;
+            },
+            /**
+             * 往返来回的方法
+             * @param {number} _num 当前单次动画第几次了
+             */
+            loopsTypeFun(_num,_loopsMode){
+                if(_loopsMode === loopType.pingqang){//开始到结尾，结尾到开始 为一个动画
+                    if( _num % 2 === 1){//奇数 更换开始接与目标的位置
+                        FROMTO.toFromFun();
+                    }else{//偶数 使用正常开始与目标的数值
+                        FROMTO.fromToFun();
+                    }  
+                }else if(_loopsMode === loopType.reversePingqang){//与Pingqang的动画相反
+                    if( _num % 2 === 1){//奇数 更换开始接与目标的位置
+                        FROMTO.fromToFun();
+                    }else{//偶数 使用正常开始与目标的数值 
+                        FROMTO.toFromFun();
+                    }  
+                }
+            },
+            //判断当前的类型 是不是反方向开始的
+            loopsTypeInit(_loopsMode){
+                if(_loopsMode === loopType.toFrom ||_loopsMode ===  loopType.reversePingqang){//从目标的位置到初始位置的运动
+                    FROMTO.toFromFun();
+                }
+            }
+        }
+        //判断当前的动画是不是反向的
+        FROMTO.loopsTypeInit(loopsMode) 
+        //开始延时函数
+        setTimeout(()=>{
+            //开始动画逻辑
+            Game.addUpdataFun(_animationID,()=>{  
+                // 当前的运动位置
+                let value = easeFun(startNum, from, to - from, useTimeNum); 
+                // 时间递增
+                startNum++; 
+                // 如果还没有运动到位，继续
+                if (startNum < useTimeNum){
+                    //帧回调
+                    if(everyFrameFun!=null && isCallback === true){
+                        everyFrameFun(startNum);
+                    }
+                    object[xORy] = value;
+                } else {  
+                     //循环次数增加
+                     _loopsNum ++;
+                    //判断动画的循环的类型 从而进行相循环处理
+                    FROMTO.loopsTypeFun(_loopsNum,loopsMode);  
+                    if(loopsNum>0){//判断是不是有指定的次数 
+                        // 检查是不是到达了指定的次数了
+                        if(_loopsNum>=loopsNum){//次数到了就将循环剔除
+                            Game.deleteUpdataFun(_animationID);  
+                        }else{
+                            startNum = 0;//从新开始动画
+                        }
+                    }else{
+                        startNum = 0;//是0的话 说明是无限次的循环
+                    } 
+                    //防止_loopsNum 过大 将其固定在0-10之间 减少内存占用
+                    if(_loopsNum>=10){
+                        _loopsNum = 0;
+                    }
+                    //帧动画结束的回调
+                    if(onCompleteFun!=null && isCallback === true){
+                        onCompleteFun();
+                    } 
+                } 
+            }) 
+        },delayedNum)
+    } 
+     /**
+     * x轴的运动动画
+     */
+    DOMoveX(){ 
+        return { 
+            fromX : null,//出发的位置  必填
+            toX : null,//目标的位置 必填
+            easeFun : null,//当前的动画效果 必填
+            useTimeNum : 100,//默认是1000毫秒的时间
+            loopsNum : 0,//循环的次数 默认无数次的循环0 
+            loopsMode:loopType.fromTo,//默认是正常的模式
+            delayedNum : 0,//延迟的当前的时间是多少 单位是毫秒
+            startNum : 0,//刚刚开始的时间在旋转中需要使用到
+            everyFrameFun : null,//当前的每帧动画的返回函数 
+            onCompleteFun : null,//动画完成的回调的方法
+            singleCompletion : null,//当前单次动画结束的回调方法
+            /**
+             * 传入当前的初始化位置在哪里
+             * @param {number} param 不传参数默认是当前的X坐标 
+             */
+            from(param =null){
+                if(param === null){
+                    param = componentInfo.constructor.x;
+                }
+                this.fromX = param; 
+                return this;
+            },
+            /**
+             * 当前的前往前往的目标点是什么
+             * @param {number} param0 
+             */
+            to(param){
+                this.toX = param; 
+                return this;
+            },
+            /**
+             * 设置位移的方式
+             */
+            setEase(ease){
+                this.easeFun = ease; 
+                return this;
+            },
+            /**
+             * 循环的次数 机器动画循环的类型
+             * @param {number} num 默认执行一次 
+             * @param {number} loopsMode  默认的是loopType.fromTo 从from到to
+             */
+            setLoops(num,loopsMode){
+                 this.loopsNum = num || this.loopsNum;//循环的次数
+                this.loopsMode = loopsMode || this.loopsMode;//默认是正常的模式 
+                console.log(`连续循环${num}次，循环方式${this.loopsMode}`);
+                return this; 
+            },
+            /**
+             * 多长时间完成这个动画 单次需要的时间 ！！！需要注意的是pingqiang中的时间，仅仅只动画完成一半需要的时间
+             * @param {number} num 单位:毫秒 
+             */
+            setUseTime(num){ 
+                // this.setLoops(this.loopsNum,this.loopsMode);//防止出现先设置时间 再设置方式方式 从新更新下动画需要的时间 ！不可去除
+                // if(this.loopsMode === loopType.pingqang || this.loopsMode === loopType.reversePingqang){
+                //     num = num / 2;//如果是反复的来回，则使用使用时间指的应该是两次总的时间是多久
+                // }
+                //当前使用的时间是多久，完成这个动画
+                this.useTimeNum = Math.ceil(num / 17);
+                console.log('玩家设置的总的时间是:',num);
+                return this;
+            },
+            /**
+             * 设置延时 单位:毫秒
+             * @param {number} num 
+             */
+            setDelayed(num){
+                this.delayedNum = num;//当前的延时时间
+                console.log(`延时${num}毫秒执行`);
+                return this;
+            },
+            /**
+             * 每帧的动画反馈
+             * @param {Function} BACK 
+             */
+            everyFrame(BACK=null){
+                if(BACK!=null){
+                    this.everyFrameFun = BACK; 
+                }
+                return this;
+            },
+            /**
+             *  动画执行完毕之后的回调方法
+             * @param {Function} BACK 
+             */
+            onComplete(BACK = null){
+                if(BACK!=null){
+                    this.onCompleteFun = BACK;
+                }
+                return this;
+            },
+            /**
+             * 单次动画完成的回调
+             * @param {Function} BACK 
+             */
+            singleCompletion(BACK = null){
+                if(BACK!=null){
+                    this.singleCompletion = BACK;
+                }
+                return this;
+            },
+            /**
+             * 动画执行的方法
+             */
+            DOAnimation(){  
+                //检测相关的参数
+                if(this.easeFun === null){
+                    Game.waringS('请选择动画的函数类型,引用DOTween脚本中的Ease选举出仅需要的相关方法');
+                    return
+                } 
+                // 设置当前的位移相关参数
+                let moveInfo={
+                    delayedNum:this.delayedNum,
+                    object:componentInfo.constructor,
+                    xORy:'x',//对x轴进行处理
+                    easeFun:this.easeFun,
+                    startNum:this.startNum,
+                    from:this.fromX,
+                    to:this.toX,
+                    useTimeNum:this.useTimeNum,
+                    loopsNum:this.loopsNum,
+                    loopsMode:this.loopsMode,
+                    everyFrameFun:this.everyFrameFun,
+                    onCompleteFun:this.onCompleteFun,
+                    singleCompletion:this.singleCompletion,
+                }
+                //使用位移的方法
+                componentInfo.self.updataMoveAmin(moveInfo); 
+            }, 
+        } 
+    }
+    /**
+     * x轴的运动动画
+     */
+    DOMoveY(){ 
+        return { 
+            fromY : null,//出发的位置  必填
+            toY : null,//目标的位置 必填
+            easeFun : null,//当前的动画效果 必填
+            useTimeNum : 100,//默认是1000毫秒的时间
+            loopsNum : 0,//循环的次数 默认无数次的循环0 
+            loopsMode:loopType.fromTo,//默认是正常的模式
+            delayedNum : 0,//延迟的当前的时间是多少 单位是毫秒
+            startNum : 0,//刚刚开始的时间在旋转中需要使用到
+            everyFrameFun : null,//当前的每帧动画的返回函数 
+            onCompleteFun : null,//动画完成的回调的方法
+            singleCompletion : null,//当前单次动画结束的回调方法
+            /**
+             * 传入当前的初始化位置在哪里
+             * @param {number} param 不传参数默认是当前的X坐标 
+             */
+            from(param =null){
+                if(param === null){
+                    param = componentInfo.constructor.x;
+                }
+                this.fromY = param; 
+                return this;
+            },
+            /**
+             * 当前的前往前往的目标点是什么
+             * @param {number} param0 
+             */
+            to(param){
+                this.toY = param; 
+                return this;
+            },
+            /**
+             * 设置位移的方式
+             */
+            setEase(ease){
+                this.easeFun = ease; 
+                return this;
+            },
+            /**
+             * 循环的次数 机器动画循环的类型
+             * @param {number} num 默认执行一次 
+             * @param {number} loopsMode  默认的是loopType.fromTo 从from到to
+             */
+            setLoops(num,loopsMode){
+                 this.loopsNum = num || this.loopsNum;//循环的次数
+                this.loopsMode = loopsMode || this.loopsMode;//默认是正常的模式 
+                console.log(`连续循环${num}次，循环方式${this.loopsMode}`);
+                return this; 
+            },
+            /**
+             * 多长时间完成这个动画 单次需要的时间 ！！！需要注意的是pingqiang中的时间，仅仅只动画完成一半需要的时间
+             * @param {number} num 单位:毫秒 
+             */
+            setUseTime(num){ 
+                // this.setLoops(this.loopsNum,this.loopsMode);//防止出现先设置时间 再设置方式方式 从新更新下动画需要的时间 ！不可去除
+                // if(this.loopsMode === loopType.pingqang || this.loopsMode === loopType.reversePingqang){
+                //     num = num / 2;//如果是反复的来回，则使用使用时间指的应该是两次总的时间是多久
+                // }
+                //当前使用的时间是多久，完成这个动画
+                this.useTimeNum = Math.ceil(num / 17);
+                console.log('玩家设置的总的时间是:',num);
+                return this;
+            },
+            /**
+             * 设置延时 单位:毫秒
+             * @param {number} num 
+             */
+            setDelayed(num){
+                this.delayedNum = num;//当前的延时时间
+                console.log(`延时${num}毫秒执行`);
+                return this;
+            },
+            /**
+             * 每帧的动画反馈
+             * @param {Function} BACK 
+             */
+            everyFrame(BACK=null){
+                if(BACK!=null){
+                    this.everyFrameFun = BACK; 
+                }
+                return this;
+            },
+            /**
+             *  动画执行完毕之后的回调方法
+             * @param {Function} BACK 
+             */
+            onComplete(BACK = null){
+                if(BACK!=null){
+                    this.onCompleteFun = BACK;
+                }
+                return this;
+            },
+            /**
+             * 单次动画完成的回调
+             * @param {Function} BACK 
+             */
+            singleCompletion(BACK = null){
+                if(BACK!=null){
+                    this.singleCompletion = BACK;
+                }
+                return this;
+            },
+            /**
+             * 动画执行的方法
+             */
+            DOAnimation(){  
+                //检测相关的参数
+                if(this.easeFun === null){
+                    Game.waringS('请选择动画的函数类型,引用DOTween脚本中的Ease选举出仅需要的相关方法');
+                    return
+                } 
+                // 设置当前的位移相关参数
+                let moveInfo={
+                    delayedNum:this.delayedNum,
+                    object:componentInfo.constructor,
+                    xORy:'y',//对x轴进行处理
+                    easeFun:this.easeFun,
+                    startNum:this.startNum,
+                    from:this.fromY,
+                    to:this.toY,
+                    useTimeNum:this.useTimeNum,
+                    loopsNum:this.loopsNum,
+                    loopsMode:this.loopsMode,
+                    everyFrameFun:this.everyFrameFun,
+                    onCompleteFun:this.onCompleteFun,
+                    singleCompletion:this.singleCompletion, 
+                }
+                //使用位移的方法
+                componentInfo.self.updataMoveAmin(moveInfo); 
+            }, 
+        } 
+    }
+    /**
+     * x轴的运动动画
+     */
+    DOMove(){ 
+        return { 
+            fromInfo:{//出发的位置  必填
+                x:0,
+                y:0,
+            },
+            toInfo:{//目标的位置 必填
+                x:0,
+                y:0,
+            },  
+            easeFun : null,//当前的动画效果 必填
+            useTimeNum : 100,//默认是1000毫秒的时间
+            loopsNum : 0,//循环的次数 默认无数次的循环0 
+            loopsMode:loopType.fromTo,//默认是正常的模式
+            delayedNum : 0,//延迟的当前的时间是多少 单位是毫秒
+            startNum : 0,//刚刚开始的时间在旋转中需要使用到
+            everyFrameFun : null,//当前的每帧动画的返回函数 
+            onCompleteFun : null,//动画完成的回调的方法
+            singleCompletion : null,//当前单次动画结束的回调方法
+            /**
+             * 传入当前的初始化位置在哪里
+             * @param {x,y} param 不传参数默认是当前的X坐标 
+             */
+            from(param={x:null,y:null}){
+                if(param.x === null || param.y === null){
+                    param.x = componentInfo.constructor.x;
+                    param.y = componentInfo.constructor.y
+                }
+                this.fromInfo = param; 
+                return this;
+            },
+            /**
+             * 当前的前往前往的目标点是什么 默认是出发位置
+             * @param {x,y} param
+             */
+            to(param={x:null,y:null}){
+                if(param.x === null || param.y === null){
+                    param.x = componentInfo.constructor.x;
+                    param.y = componentInfo.constructor.y
+                }
+                this.toInfo = param;  
+                return this;
+            },
+            /**
+             * 设置位移的方式
+             */
+            setEase(ease){
+                this.easeFun = ease; 
+                return this;
+            },
+            /**
+             * 循环的次数 机器动画循环的类型
+             * @param {number} num 默认执行一次 
+             * @param {number} loopsMode  默认的是loopType.fromTo 从from到to
+             */
+            setLoops(num,loopsMode){
+                 this.loopsNum = num || this.loopsNum;//循环的次数
+                this.loopsMode = loopsMode || this.loopsMode;//默认是正常的模式 
+                console.log(`连续循环${num}次，循环方式${this.loopsMode}`);
+                return this; 
+            },
+            /**
+             * 多长时间完成这个动画 单次需要的时间 ！！！需要注意的是pingqiang中的时间，仅仅只动画完成一半需要的时间
+             * @param {number} num 单位:毫秒 
+             */
+            setUseTime(num){  
+                //当前使用的时间是多久，完成这个动画
+                this.useTimeNum = Math.ceil(num / 17);
+                console.log('玩家设置的总的时间是:',num);
+                return this;
+            },
+            /**
+             * 设置延时 单位:毫秒
+             * @param {number} num 
+             */
+            setDelayed(num){
+                this.delayedNum = num;//当前的延时时间
+                console.log(`延时${num}毫秒执行`);
+                return this;
+            },
+            /**
+             * 每帧的动画反馈
+             * @param {Function} BACK 
+             */
+            everyFrame(BACK=null){
+                if(BACK!=null){
+                    this.everyFrameFun = BACK; 
+                }
+                return this;
+            },
+            /**
+             *  动画执行完毕之后的回调方法
+             * @param {Function} BACK 
+             */
+            onComplete(BACK = null){
+                if(BACK!=null){
+                    this.onCompleteFun = BACK;
+                }
+                return this;
+            },
+            /**
+             * 单次动画完成的回调
+             * @param {Function} BACK 
+             */
+            singleCompletion(BACK = null){
+                if(BACK!=null){
+                    this.singleCompletion = BACK;
+                }
+                return this;
+            },
+            /**
+             * 动画执行的方法
+             */
+            DOAnimation(){  
+                //检测相关的参数
+                if(this.easeFun === null){
+                    Game.waringS('请选择动画的函数类型,引用DOTween脚本中的Ease选举出仅需要的相关方法');
+                    return
+                } 
+                // 设置当前的位移相关参数
+                let moveInfo={
+                    delayedNum:this.delayedNum,
+                    object:componentInfo.constructor,
+                    xORy:'x',//对x轴进行处理
+                    easeFun:this.easeFun,
+                    startNum:this.startNum,
+                    from:this.fromInfo.x,
+                    to:this.toInfo.x,
+                    useTimeNum:this.useTimeNum,
+                    loopsNum:this.loopsNum,
+                    loopsMode:this.loopsMode,
+                    everyFrameFun:this.everyFrameFun,
+                    onCompleteFun:this.onCompleteFun,
+                    singleCompletion:this.singleCompletion,
+                }
+                //使用位移的方法
+                componentInfo.self.updataMoveAmin(moveInfo); 
+
+                // 设置当前的位移相关参数
+                let moveInfo2={
+                    delayedNum:this.delayedNum,
+                    object:componentInfo.constructor,
+                    xORy:'y',//对y轴进行处理
+                    easeFun:this.easeFun,
+                    startNum:this.startNum,
+                    from:this.fromInfo.y,
+                    to:this.toInfo.y,
+                    useTimeNum:this.useTimeNum,
+                    loopsNum:this.loopsNum,
+                    loopsMode:this.loopsMode,
+                    everyFrameFun:this.everyFrameFun,
+                    onCompleteFun:this.onCompleteFun,
+                    singleCompletion:this.singleCompletion,
+                    isCallback:false,//取消这函数所有的回调
+                }
+                //使用位移的方法
+                componentInfo.self.updataMoveAmin(moveInfo2); 
+            }, 
+        } 
+    }
+    /**
+     * 设置大小而专门使用的
+     */
+    DOScale(){
+        return { 
+            /**
+             * 传入当前的初始化位置在哪里
+             * @param {objcet} param 
+             */
+            from({x,y}){
+
+            },
+            /**
+             * 当前的前往前往的目标点是什么
+             * @param {objcet} param0 
+             */
+            to({x,y}){
+
+            },
+                    /**
+             * 设置位移的方式
+             */
+            setEase(ease){
+
+            },
+            /**
+             * 循环的次数
+             * @param {*} num 
+             */
+            setLoops(num){
 
 
+            },
+            /**
+             * 设置延时 单位是毫秒
+             * @param {number} num 
+             */
+            setDelayed(num){
+
+            },
+            /**
+             *  动画执行完毕之后的回调方法
+             * @param {Function} BACK 
+             */
+            onComplete(BACK = null){
+                if(BACK!=null){
+                    BACK();
+                }
+            }
+        
+        } 
+    }
+/**
+     * 设置位移的方式
+     */
+    setEase(ease){
+
+    }
+    /**
+     * 循环的次数
+     * @param {*} num 
+     */
+    setLoops(num){
+
+
+    }
+    /**
+     * 设置延时 单位是毫秒
+     * @param {number} num 
+     */
+    setDelayed(num){
+
+    }
+    /**
+     *  动画执行完毕之后的回调方法
+     * @param {Function} BACK 
+     */
+    onComplete(BACK = null){
+        if(BACK!=null){
+            BACK();
+        }
+    }
+
+    
     // function getInstance(){
     //     if( !DOTWeen.instance ){
     //         DOTWeen.instance = new DOTWeen();

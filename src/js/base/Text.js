@@ -2,13 +2,14 @@ import {Behaviour} from './Behaviour';
 import {Game, gameInfo} from './Game';
 
 export class Text extends Behaviour{
-    constructor(context,text) {
+    constructor(context,text,_ID) {
         super()
 
         this.TypeName = 'Text';
         this.context = context;
         this.text=text;
         this.fontName = text;
+        this.objectID = _ID;
 
         this.fontSizeNum = 10;//字体的大小
         this.fontSizeNumder = this.fontSizeNum;
@@ -145,7 +146,7 @@ export class Text extends Behaviour{
      * @param{start,end,left,center,right} type
      *
      */
-    fontTextAlign(type){
+    fontTextAlign(type = 'center'){
         if (!(type === 'start' || type === 'end' || type === 'left' || type === 'center' || type === 'right')) {
             new Error('字体水平模式的设置只使用 start end left center right 中的任何一个，不可自定义 ');
         } else {
@@ -159,7 +160,7 @@ export class Text extends Behaviour{
      * @param{top,bottom,middle,alphabetic,hanging } type
      *
      */
-    fontTextBaseline(type){
+    fontTextBaseline(type = 'middle'){
         if (!(type === 'top' || type === 'bottom' || type === 'middle' || type === 'alphabetic' || type === 'hanging')) {
             new Error('字体水平模式的设置只使用 top bottom middle alphabetic hanging 中的任何一个，不可自定义 ');
         } else {

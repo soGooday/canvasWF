@@ -1,13 +1,54 @@
+import game from './Game';
+import DOTween from './DOTween';
+import Button from './Button';
 //基础类 一些基础组件需要继承自这个
 export class Behaviour {
     constructor(){
         this.TypeName = 'Behaviour';
-
-
-
-
-
-
+        console.log('Behaviour:',this);
+        this.DOTween = null;;
+    }
+    /**
+     * 取到当前的具体组件是什么
+     * @param {string} componentName 
+     */
+    getComponent(componentName){
+      return this._getComponent(componentName);
+    }
+    /**
+    * 添加上当前的具体的组件是什么 
+     * @param {string} componentName 
+     */
+    addComponent(componentName){
+        if( typeof componentName != 'string'){
+            game.getInstance().waring('传入的必须是string的类型'); 
+        }
+        //添加需要的组件
+        return this._addComponent(componentName);
+    }
+    /**
+     * 添加上当前的具体的组件是什么 私有的方法
+     * @param {string} componentName 
+     */
+    _addComponent(componentName){
+        if(componentName === 'DOTween'){
+            this.DOTween = new DOTween(this);
+            this._addComponent.call(this,this.DOTween);
+            return this.DOTween = new DOTween(this); 
+        }else if(componentName === 'Button'){
+            return this.Button = new Button(this); 
+        }
+    }
+    /**
+     * 取到当前的具体组件是什么 私有的方法
+     * @param {string} componentName 
+     */
+    _getComponent(componentName){
+        if(componentName === 'DOTween'){
+            return this.DOTween;  
+        }else if(componentName === 'Button'){
+            return this.Button;  
+        }
     }
 
 
