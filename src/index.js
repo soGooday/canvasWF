@@ -45,9 +45,10 @@ class fruitMachines   {
         let text = Game.createFontS(100,200,'text');
         text.fontContent("测试位置");
         text.fontSize(60).fontColor('#000000');
-        text.fontTextAlign('start');
+        text.fontTextAlign('center');
+        text.fontTextBaseline('bottom');//bottom
         let textAnimaiton = text.addComponent('DOTween');
-        textAnimaiton.DOMove().from().to({x:500,y:500}).setEase(Ease.Quad.easeInOut)
+        textAnimaiton.DOScale().from().to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
             .setUseTime(1000)
             .setLoops(0,loopType.pingqang) 
             .setDelayed(1000)
