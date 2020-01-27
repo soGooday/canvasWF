@@ -72,6 +72,7 @@ export class Text extends Behaviour{
 
         return this;
     }
+
     /**
      * 隐藏或者显示字体
      * @param{boolean} state
@@ -92,15 +93,16 @@ export class Text extends Behaviour{
     scale(scaleX,scaleY){
         this.scaleW = scaleX;
         this.scaleH = scaleY;
-
+        return this;
     }
     /**
-     * 确定这个字体的锚点在哪里 现在只适用于旋转的锚点设置 移动的锚点正在添加ing
+     * 确定这个text的锚点在哪里 现在只适用于非坐标的锚点设置（放大缩小，旋转是可以的） 移动的锚点正在添加ing
      * @param{number} anchorX 左边->右边（0-1）传进来的是小数
      * @param{number} anchorY 上边->下边（0-1）传进来的是小数
      */
     anchor(anchorX,anchorY){
         (this.fontTextInfo.anchorInfo={anchorX,anchorY});
+        return this;
     }
     /**
      * 设置精灵的透明度
@@ -177,11 +179,7 @@ export class Text extends Behaviour{
     position(positionX,positionY) {
         this.x = positionX;//x的位置
         this.y = positionY;  //Y的位置
-
-
-        // console.log('getPosition:',this.getPosition());
-
-
+        return this;  
     }
     /**
      * 设置字体颜色的参数
@@ -189,8 +187,7 @@ export class Text extends Behaviour{
      */
     fontColor(colorNum){
         if(typeof(colorNum) === 'string'){
-            this.colorNum =colorNum;
-            // console.error('----',colorNum instanceof String);
+            this.colorNum =colorNum; 
 
         }
         return this;
@@ -213,21 +210,23 @@ export class Text extends Behaviour{
         if(this.setActiveState === false){
             return;
         }
-
-
-        this.context.save();
-
-        //这边之所以Y需要减去一些80是因为这样放大缩小的锚点才能跑到字体的左右的中间
-        this.context.translate((this.x)*window.remscale,(this.y-80)*window.remscale);
-
+        //下面备注掉的是本想给字体添加锚点的设置 又因为原生提供的垂直与行的原生方法，能够实现基本的需求，于是便没有封装。如果你看到这个注释，你需要需要哦这个需求
+        //我的思路是，将我上面封装的关于横向与纵向的模式改成坐标的位置从而实现，放弃原生的API--fontTextBaselineType与fontTextAlignType 我下面的注释已经帮助你完成
+        //你需要知道的关于字体的宽与高的方法 
+        //字体的宽 this.context.measureText(this.text).width
+        //字体的高 this.fontSizeNumder
+        let translateX = (this.x)*window.remscale;
+        let translateY = (this.y)*window.remscale;
+        this.context.save();  
+        this.context.translate(translateX,translateY); 
         this.context.globalAlpha = this.alphaNum;//透明度
         this.context.fillStyle = this.colorNum;//字体颜色
         this.context.font = this.fontSizeNum  +' '+ this.fontStyleContent +' '+'黑体';
         this.context.textAlign = this.fontTextAlignType;// 设置水平对齐方式
         this.context.textBaseline = this.fontTextBaselineType; // 设置垂直对齐方式
         this.context.scale(this.scaleW,this.scaleH);//方法缩小
-        this.context.translate(-(this.x)*window.remscale,-(this.y-80)*window.remscale);
-        this.context.fillText(this.text, this.x*window.remscale, this.y*window.remscale);
+        this.context.translate(-translateX,-translateY);
+        this.context.fillText(this.text, translateX, translateY);
         this.context.restore();
     }
 
@@ -248,55 +247,7 @@ export class Text extends Behaviour{
         Game.deleteObj(this.name);
     }
 
-    //--------------------------------------------动画--------------------------------
-    //--------------------放大缩小的函数--------------
-    /**
-     *往返的放大缩小
-     * @param targetX
-     * @param targetY
-     * @param spring
-     * @constructor
-     */
-    DoEaseInscaleForever(targetX,targetY,spring){
-        if(this.setActiveState === false){
-            return;
-        }
-        if(targetX === 0 && targetY === 0){
-            return;
-        }
-        this.fontTextInfo.scaleInfo.EaseIn.vx += (targetX - this.scaleW) * spring;
-        this.fontTextInfo.scaleInfo.EaseIn.vy += (targetY - this.scaleH) * spring;
-        this.scaleW +=this.fontTextInfo.scaleInfo.EaseIn.vx;
-        this.scaleH +=this.fontTextInfo.scaleInfo.EaseIn.vy;
-        // console.log(this.scaleW,this.scaleH);
-
-
-    }
-
-    /**
-     * 放大缩小一次
-     * @param targetX
-     * @param targetY
-     * @param spring
-     * @constructor
-     */
-    DoEaseOutBtnScale(targetX,targetY,spring,repeatNum){
-        if(this.setActiveState === false){
-            return;
-        }
-
-        if(targetX === 0 && targetY === 0){
-            return;
-        }
-
-
-
-        this.fontTextInfo.scaleInfo.EaseIn.vx += (targetX - this.scaleW) * spring;
-        this.fontTextInfo.scaleInfo.EaseIn.vy += (targetY - this.scaleH) * spring;
-        this.scaleW +=this.fontTextInfo.scaleInfo.EaseIn.vx;
-        this.scaleH +=this.fontTextInfo.scaleInfo.EaseIn.vy;
-
-    }
+     
     //-----------------旋转的函数---------------------
     /**
      * 旋转的函数

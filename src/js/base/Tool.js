@@ -57,9 +57,6 @@ export class Tool {
         backNum+=this.randomFrom(minNum*10,maxNum*10)/10;
 
         backNum = (Math.random()*(Min-Max) + Max).toFixed(2);
-
-
-
     }
 
 

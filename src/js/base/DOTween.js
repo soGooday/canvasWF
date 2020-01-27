@@ -289,7 +289,7 @@ export default class DOTween {
                 // 如果还没有运动到位，继续
                 if (startNum < useTimeNum){
                     //帧回调
-                    if(everyFrameFun!=null && isCallback === true){
+                    if(isCallback === true  &&  everyFrameFun!=null){
                         everyFrameFun(startNum);
                     }
                     object[xORy] = value;
@@ -313,7 +313,7 @@ export default class DOTween {
                         _loopsNum = 0;
                     }
                     //帧动画结束的回调
-                    if(onCompleteFun!=null && isCallback === true){
+                    if(isCallback === true  &&   onCompleteFun!=null ){
                         onCompleteFun();
                     } 
                 } 
@@ -321,13 +321,13 @@ export default class DOTween {
         },delayedNum)
     } 
      /**
-     * x轴的运动动画
+     * DOTween的相关动画的基础逻辑
      */
-    DOMoveX(){ 
+    DOTweenBase(){ 
         return { 
             fromNum : null,//出发的位置  必填
             toNum : null,//目标的位置 必填
-            xORy:'x',//动画控制的变量
+            xORy:'x',//动画控制的变量 默认是x轴
             easeFun : null,//当前的动画效果 必填
             useTimeNum : 100,//默认是1000毫秒的时间
             loopsNum : 0,//循环的次数 默认无数次的循环0 
@@ -453,11 +453,28 @@ export default class DOTween {
             }, 
         } 
     }
+       /**
+     * x轴的运动动画
+     */
+    DOMoveX(){ 
+        let animation = this.DOTweenBase();
+        animation.xORy = 'x';//设置的表变量
+        // //将方法from的默认方法进行重写
+        /**
+         * 传入当前的初始化位置在哪里
+         * @param {number} param 不传参数默认是当前的X坐标 
+         */
+        animation.from = function (param = componentInfo.constructor.x) {
+            this.fromNum = param; 
+            return this;
+        }  
+        return animation; 
+    }
     /**
      * x轴的运动动画
      */
     DOMoveY(){ 
-        let animation = this.DOMoveX();
+        let animation = this.DOTweenBase();
         animation.xORy = 'y';//设置的表变量
         // //将方法from的默认方法进行重写
         /**
@@ -474,7 +491,7 @@ export default class DOTween {
      * xy轴的运双向动画
      */
     DOMove(){  
-        let animation = this.DOMoveX(); 
+        let animation = this.DOTweenBase(); 
         //将方法from的默认方法进行重写
         /**
          * 传入当前的初始化位置在哪里
@@ -546,7 +563,7 @@ export default class DOTween {
      * 设置大小而专门使用的 关于宽的设置
      */
     DOScaleWidth(){ 
-        let animation = this.DOMoveX();
+        let animation = this.DOTweenBase();
         animation.xORy = 'scaleW',//设置的表变量
         //将方法from的默认方法进行重写
         /**
@@ -563,7 +580,7 @@ export default class DOTween {
      * 设置大小而专门使用的 关于高的设置
      */
     DOScaleHeight(){ 
-        let animation = this.DOMoveX();
+        let animation = this.DOTweenBase();
         animation.xORy = 'scaleH',//设置的表变量
         //将方法from的默认方法进行重写
         /**
@@ -580,7 +597,7 @@ export default class DOTween {
      * 设置大小而专门使用的 关于高的设置
      */
     DOScale(){ 
-        let animation = this.DOMoveX(); 
+        let animation = this.DOTweenBase(); 
         //将方法from的默认方法进行重写
         /**
          * 传入当前的初始化位置在哪里

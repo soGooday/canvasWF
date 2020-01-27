@@ -1,12 +1,14 @@
 import game from './Game';
 import DOTween from './DOTween';
 import Button from './Button';
+import Collision from './Collision';
 //基础类 一些基础组件需要继承自这个
 export class Behaviour {
     constructor(){
-        this.TypeName = 'Behaviour';
-        console.log('Behaviour:',this);
-        this.DOTween = null;;
+        this.TypeName = 'Behaviour'; 
+        this.DOTween = null;
+        this.Button = null;
+        this.Collision = null;
     }
     /**
      * 取到当前的具体组件是什么
@@ -32,11 +34,14 @@ export class Behaviour {
      */
     _addComponent(componentName){
         if(componentName === 'DOTween'){
-            this.DOTween = new DOTween(this);
-            this._addComponent.call(this,this.DOTween);
             return this.DOTween = new DOTween(this); 
+
         }else if(componentName === 'Button'){
             return this.Button = new Button(this); 
+
+        }else if(componentName === 'Collision'){
+            return this.Collision = new Collision(this); 
+
         }
     }
     /**
@@ -48,6 +53,8 @@ export class Behaviour {
             return this.DOTween;  
         }else if(componentName === 'Button'){
             return this.Button;  
+        }else if(componentName === 'Collision'){
+            return this.Collision;  
         }
     }
 

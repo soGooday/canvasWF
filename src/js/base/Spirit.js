@@ -41,6 +41,8 @@ export class Spirit extends Behaviour{
         this.scaleH=1;//对canvas的方法缩小height
         this.imageW = this.img.width*this.SpiritInfo.imageScaleNum;//宽
         this.imageH = this.img.height*this.SpiritInfo.imageScaleNum;//高
+        this.width = this.imageW;//这个变量存在的作用的是为了适配collision的组件 因为imageW并不是大家去边采用的变量命名方式
+        this.height = this.imageH;//这个变量存在的作用的是为了适配collision的组件
         this.alphaNum = 1;
 
         this.scale(1,1);//
@@ -55,6 +57,7 @@ export class Spirit extends Behaviour{
      */
     makeSpritMarkName(Name_){
         this.spritMarkName = Name_;
+        return this;
     }
 
     /**
@@ -96,6 +99,7 @@ export class Spirit extends Behaviour{
      */
     anchor(anchorX,anchorY){
         (this.SpiritInfo.anchorInfo={anchorX,anchorY});
+        return this;
     }
     /**
      * 设置精灵的透明度
@@ -103,6 +107,7 @@ export class Spirit extends Behaviour{
      */
     alpha(num){
         this.alphaNum = num;
+        return this;
 
     }
 
@@ -115,6 +120,7 @@ export class Spirit extends Behaviour{
      */
     color(r,g,b,a){
         (this.SpiritInfo.color = {r,g,b,a});
+        return this;
         // 'rgba(255, 255, 255, 0)'
     }
 
@@ -127,6 +133,7 @@ export class Spirit extends Behaviour{
     rotateBy(edg){
         //移动canvas原点  旋转canvas  插入图片并移动
         this.SpiritInfo.rotateInfo.rotateNum += edg;
+        return this;
     }
 
     /**
@@ -139,7 +146,7 @@ export class Spirit extends Behaviour{
     rotateTo(edg){
         //移动canvas原点  旋转canvas  插入图片并移动
         this.SpiritInfo.rotateInfo.rotateNum = edg;
-
+        return this;
     }
 
     /**
@@ -160,7 +167,7 @@ export class Spirit extends Behaviour{
 
         this.x = positionX;
         this.y = positionY;
-
+        return this;
         // console.log('调取-----'.this.positionChiled);
         // super.positionChiled(positionX,positionY);
 
@@ -174,7 +181,7 @@ export class Spirit extends Behaviour{
     scale(scaleX,scaleY){
         this.scaleW = scaleX;
         this.scaleH = scaleY;
-
+        return this;
     }
 
     /**
