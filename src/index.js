@@ -17,8 +17,8 @@ class Demo   {
     init(){
         //canvas的配置设置
         let gameoConfig={
-            // width:750/2,//设置canvas的宽
-            // height:1334/2 ,//设置canvas的高
+            // width:750/2,//设置canvas的宽 暂时不使用  再index.css中设置canvas的宽
+            // height:1334/2 ,//设置canvas的高 暂时不使用再index.css中设置canvas的高
             canvasId:'demo',//设置canvas的id
             type:'canvas',//使用的类型 目前就这一个选项 后期可能会添加webgl
             create:this.create,//资源加载完毕后加载的方法 
