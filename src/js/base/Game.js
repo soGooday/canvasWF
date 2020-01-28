@@ -14,70 +14,135 @@ export let gameInfo={
     sceneW:0,
     sceneH:0,
     canvas:null,//离屏canvas
-    canvasId:'fruitMachinesCanvas',
-    FindCanvas:'#fruitMachinesCanvas',
+    canvasId:null,
+    FindCanvas:null,
     content:null,
     indexSpritiID:0,//创造出来的精灵的id
     indexFontID:0,//字体的专属id
     drawCanvas:null,//渲染canvas
     drawContent:null,
+    config:null,
 };
 
 
 export class Game{
     //初始化相关的信息
-    constructor(){
-
-
+    constructor(config){
         this.TypeName = 'Game';
+        gameInfo.config = config;
+        // 设置适配
+        // this.setHTML(config); 
+        
         //创建字典
+        this.creatGameMap(config);
+
+        //创建canvas
+        this.createCanvas(config);
+        
+        //设置canvas的宽与高度  
+        this.setCanvasWH(config);
+    
+    
+
+        //之所以使用这个的原因是会出现取到的canvas的相关参数this.canvas.getBoundingClientRect().width与height的高度不是最后加载好的DOM数据 这样导致出现了canvas的适配出现了问题
+        //dom构建完毕之后调取这个  要不然适配会出现问题
+        Tool.DOMContentLoaded(()=>{
+            //更新一下canvas的宽与高
+            this.setCanvasWH(config);
+        });
+        //处理屏幕的过高的背景问题 禁止玩家上下滑动
+        this.preventDefault(); 
+    }
+    /**
+     *创建Game要使用的相关的map
+     */
+    creatGameMap(){
         gameInfo.allImageObjMap = new Map();
         gameInfo.showImageObjMap = new Map();
         gameInfo.showFontObjMap = new Map();
         gameInfo.allImageMap = new Map();
         gameInfo.showGroupObjSet = new Set();
         gameInfo.eventFunMap = new Map();//事件的方法
+    }
 
-    
 
+    /**
+     * 创建cnavas的相关参数
+     * @param {object} config 
+     */
+    createCanvas(config){
+        gameInfo.canvasId=config.canvasId;
+        gameInfo.FindCanvas=`#${config.canvasId}`,
+        //创建离屏canvas 
         this.canvas = document.createElement('canvas');
         this.content = this.canvas.getContext('2d');
+        //创建渲染canvas
+        this.drawCanvas = document.getElementById(gameInfo.canvasId); 
+        this.drawContent = this.drawCanvas.getContext('2d');  
 
-        this.drawCanvas = document.getElementById(gameInfo.canvasId);
-        this.drawContent = this.drawCanvas.getContext('2d');
-        
 
-        //设置canvas的宽与高度
-        this.setCanvasWH();
-        //储存起来相应数组 备用
         gameInfo.canvas = this.canvas;
         gameInfo.content = this.content;
 
         gameInfo.drawCanvas = this.drawCanvas;
         gameInfo.drawContent = this.drawContent;
-
-        //之所以使用这个的原因是会出现取到的canvas的相关参数this.canvas.getBoundingClientRect().width与height的高度不是最后加载好的DOM数据 这样导致出现了canvas的适配出现了问题
-        //dom构建完毕之后调取这个  要不然适配会出现问题
-        Tool.DOMContentLoaded(()=>{
-            //更新一下canvas的宽与高
-            this.setCanvasWH();
-        });
-        //处理屏幕的过高的背景问题 禁止玩家上下滑动
-        this.preventDefault();
-
-
-
-
-
     }
+    /**
+     * html的适配 当前并未使用
+     * @param {object} config 是不是移动端的适配
+     */
+    setHTML(config){
+        let self = this;
+        let setCanvas={
+            canvasFun(num){ 
+                let canvas = document.createElement("canvas");
+                canvas.id = config.canvasId;
+                window.document.getElementsByTagName("BODY")[0].appendChild(canvas);
+                let _canvas = document.getElementById(config.canvasId);
+                let _width = `${config.width/num/2}rem`;
+                let _height = `${config.height/num/2}rem`; 
+                _canvas.width = _width;
+                _canvas.height = _height;
+                
+                self.createCanvas(config);
+                
+                self.setCanvasWH(config);
+                
+                console.log('_width:',_width,'_height:',_height,'_canvas:',_canvas,'docEl.style.fontSize:',docEl.style.fontSize); 
+            } 
+        }  
+        let docEl = document.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function () {
+            var clientWidth = docEl.clientWidth || 375;
+            clientWidth > 750 ? clientWidth = 750 : clientWidth = clientWidth;
+            if (clientWidth){
+                const fz = docEl.style.fontSize = 20 * (clientWidth / 375);
+                let num = 20 * (clientWidth / 375);
+                docEl.style.fontSize =num + 'px';
+                setCanvas.canvasFun(num);
+                window.remscale = clientWidth / 375;
+                var realfz = ~~(+window.getComputedStyle(document.getElementsByTagName("html")[0]).fontSize.replace('px','')*10000)/10000
+                if (fz !== realfz) {
+                    document.getElementsByTagName("html")[0].style.cssText = 'font-size: ' + fz * (fz / realfz) +"px";
+                }
+
+            }
+        };
+        if (document.addEventListener){
+            window.addEventListener(resizeEvt, recalc, false);
+            document.addEventListener('DOMContentLoaded', recalc, false);
+        }  
+    }
+
 
     /**
      * game的单例
      * @returns {Game}
      */
-    static getInstance(){
+    static getInstance(config){
         if(this.instance === null || this.instance === undefined){
-            this.instance = new Game();
+            this.instance = new Game(config);
         }
         return this.instance;
     }
@@ -85,7 +150,7 @@ export class Game{
     /**
      * 在创建完毕了相应的资源开始绘制前一步加上这个 更新画布 防止适配出现问题
      */
-    setCanvasWH(){
+    setCanvasWH(config = gameInfo.config){ 
         this.canvas.width = this.drawCanvas.getBoundingClientRect().width*2;
         this.canvas.height = this.drawCanvas.getBoundingClientRect().height*2;
 
@@ -94,6 +159,15 @@ export class Game{
       
         gameInfo.sceneW = this.canvas.width;
         gameInfo.sceneH = this.canvas.height;
+
+        // this.canvas.width = config.width;
+        // this.canvas.height = config.height;
+
+        // this.drawCanvas.width = config.width;
+        // this.drawCanvas.height = config.height;
+      
+        // gameInfo.sceneW = this.canvas.width;
+        // gameInfo.sceneH = this.canvas.height; 
     }
  
     /**
@@ -114,14 +188,21 @@ export class Game{
      * @param{Set} FileSet
      * @returns {Function} 返回的是加载完成回调函数
      */
-    loadRes(FileSet,BACKfUN,updataBACKFun){
+    loadRes(FileSet,BACKfUN=null,updataBACKFun=null){
         let resMapL = 0;//数组中的长度
         for (let x of FileSet) {//遍历set
             // eslint-disable-next-line no-loop-func
             this.loadIamge(x[0],x[1],()=>{
                 resMapL++;
                 if(resMapL>=FileSet.size){
-                    BACKfUN();
+                    if(BACKfUN!=null && typeof BACKfUN === 'function'){
+                        
+                        BACKfUN();
+                    }
+                    if(updataBACKFun!=null && typeof updataBACKFun === 'function'){
+                        updataBACKFun();
+                    }
+                    this.create();//调取资源加载完毕的方法
                 }
             });
         }
@@ -176,15 +257,7 @@ export class Game{
             sprit_.position(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
-        }
-        //暂时不要删掉
-        // if(gameInfo.allImageObjMap.has(spriteKey) === true){
-        //     let sprit_ = gameInfo.allImageObjMap.get(spriteKey);
-        //     sprit_.position(positionX,positionY);
-        //     gameInfo.showImageObjMap.set(spriteKey,sprit_);
-        //     return sprit_;
-        // }
-
+        } 
     }
 
     /**
@@ -209,7 +282,7 @@ export class Game{
     /**
      * 遍历图片显示出来  然后调取帧动画进行渲染
      */
-    drawRes(){ 
+    drawRes(){  
         this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
         this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
         for (let item  of gameInfo.showImageObjMap.entries()) {//渲染所有的图片 
@@ -224,18 +297,28 @@ export class Game{
         this.drawContent.drawImage(this.canvas, 0, 0);
        
     }
-    
-
+    /**
+     * 资源加载完毕之后会会调取这个方法
+     */
+    create(){ 
+        if(gameInfo.config.actionScope.create){
+            let createBack = gameInfo.config.actionScope;
+            createBack.create();
+            //检测是不是有updata函数 
+        } 
+        this.updata(); 
+    } 
     /**
      * 创建updata的振更新
      */
-    updata(){
-        console.log('开始真更新');
-        //开始绘制
-
-        gameInfo.self.drawRes();
+    updata(){ 
+        if(gameInfo.config.actionScope.updata){ 
+            gameInfo.config.actionScope.updata();
+        }  
+        //开始绘制 
+        this.drawRes();
         //重复调取
-        window.requestAnimationFrame(this.updata);
+        window.requestAnimationFrame(this.updata.bind(this));
     }
 
     //---------------字体的相关设置-------------------

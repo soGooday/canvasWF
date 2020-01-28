@@ -246,7 +246,12 @@ export class Text extends Behaviour{
     destroy(){
         Game.deleteObj(this.name);
     }
-
+    /**
+     * 销毁游戏体
+     */
+    remvoe(){
+        Game.deleteObj(this.name);
+    }
      
     //-----------------旋转的函数---------------------
     /**
