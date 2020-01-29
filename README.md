@@ -3,10 +3,14 @@
 
 >本地运行
 >>npm run dev
+
 >测试服
 >>pm run build:d
+
 >正式服
 >>pm run build:p
+
+csdn地址: https://blog.csdn.net/huhudeni/article/details/104090288
 
 # 只想使用以及极其简单的webpack
   > 建工程下载下来后 在src/index.js脚本内容清空  同时将下面这句话赋值粘贴放在src/index.js脚本里面
@@ -15,6 +19,8 @@
   >如果你想使用zepto 及其动画 就是再加上下面的引用
   >> `import $ from 'zepto-webpack'`
   >> `import "./js/zeptoFx.js"`
+
+
 
 # canvasWF
 ## 话语
