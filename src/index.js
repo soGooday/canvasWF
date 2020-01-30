@@ -16,9 +16,7 @@ class Demo   {
     }
     init(){
         //canvas的配置设置
-        let gameoConfig={
-            // width:750/2,//设置canvas的宽 暂时不使用  再index.css中设置canvas的宽
-            // height:1334/2 ,//设置canvas的高 暂时不使用再index.css中设置canvas的高
+        let gameoConfig={ 
             canvasId:'demo',//设置canvas的id
             type:'canvas',//使用的类型 目前就这一个选项 后期可能会添加webgl
             create:this.create,//资源加载完毕后加载的方法 
@@ -31,22 +29,28 @@ class Demo   {
     create(){ 
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
-        let  bgButton = this.Bg.addComponent('Button'); //给背景图添加上button的按钮时间
-        bgButton.addEventClick(()=>{
-            console.log('点击了按钮的事件')
-        })
+    
+         
 
         this.c1 = this.game.createSprite(50,200,'c1');//创建一个小人
         let c1Collision = this.c1.addComponent('Collision');//添加碰撞检测事件
         let c1Aniamtion = this.c1.addComponent('DOTween');//添加DOTween动画
 
         this.c2 = this.game.createSprite(600,200,'c2');//创建另外一个小人
-        this.c2.scale(-1,1);//将以Y轴进行反转
+        this.c2.scale(-1,1);//将以Y轴进行反转 
+        let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
+        c2Button.addEventDown(()=>{//是用BUTTON上的组件方法
+            console.log('鼠标按下的事件')
+        }).addEventUp(()=>{
+            console.log('鼠标抬起事件');
+        })
+
+
         //使用碰撞组件上的相关方法
         c1Collision.collisionTarget(this.c2)//碰撞的目标
-            .onBeginContact(()=>{ console.log('相撞了'); })//三种回调事件
+            .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件
             .incollision(()=>{console.log('正在重叠')})
-            .onEndContact(()=>{console.log('碰撞结束')})
+            .onEndContact(()=>{console.log('碰撞结束');this.c2.setActive(true)})
             .DO();//执行碰撞检测事件
         //使用x的DOTween动画
         c1Aniamtion.DOMoveX().from().to(700)
@@ -65,7 +69,7 @@ class Demo   {
             .setLoops(2,loopType.pingqang) 
             .setDelayed(0)
             .onComplete(()=>{console.log('当前的动画执行完毕了!',text.x)})//当前的动画执行完毕的回调
-            .everyFrame((index)=>{console.log(index)})//期间的每帧动画的回调
+            .everyFrame()//期间的每帧动画的回调
             .DOAnimation();
 
         this.game.showCanvasWH();//展示当前屏幕的相关信息 

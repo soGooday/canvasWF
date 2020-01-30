@@ -1,16 +1,15 @@
 # 使用
-记得下载下来的第一件事就是 npm install
+记得下载下来的第一件事就是 本地运行：`npm install` 
 
->本地运行
->>npm run dev
 
->测试服
->>pm run build:d
+本地运行：`npm run dev`
+ 
+测试服：`pm run build:d` 
 
->正式服
->>pm run build:p
+正式服：`pm run build:p`
 
-csdn地址: https://blog.csdn.net/huhudeni/article/details/104090288
+ 
+csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 
 # 只想使用以及极其简单的webpack
   > 建工程下载下来后 在src/index.js脚本内容清空  同时将下面这句话赋值粘贴放在src/index.js脚本里面

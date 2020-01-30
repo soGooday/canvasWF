@@ -135,10 +135,15 @@ export class Game{
         }  
     }
 
+ 
 
     /**
      * game的单例
-     * @returns {Game}
+     * @param {canvasId 创建出来的canvasID \n
+     *          type 填写类型 目前只有canvas
+     *          create 素材加载完毕后的执行函数仅仅执行一次
+     *          updata 真更新函数
+     *          actionScope}config  create,updata不是必填，其他都是必须填写
      */
     static getInstance(config){
         if(this.instance === null || this.instance === undefined){
@@ -173,15 +178,10 @@ export class Game{
     /**
      *阻止手机端的制动
      */
-    preventDefault(){ 
-
+    preventDefault(){  
         gameInfo.drawCanvas.addEventListener('touchmove',event=>{
             event.preventDefault();
-        });
-
-        // $(gameInfo.FindCanvas).on('touchmove',  event => {
-        //     event.preventDefault();
-        // });
+        }); 
     }
     /**
      * 加载的是资源 放进去的是Set  这个是加载第一步

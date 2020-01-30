@@ -71,6 +71,7 @@ export default class Button{
                 BACKFUN();
             }
         },false);
+        return this;
     }
     /**
      * 为了精灵添加点鼠标悬浮的事件
@@ -84,6 +85,7 @@ export default class Button{
                 new  Error('此精灵已经调取了这个方法了,不可以添加了');
             }
         });
+        return this;
 
     }
     /**
@@ -95,7 +97,8 @@ export default class Button{
             if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
                 BACKFUN();
             }
-        }) 
+        });
+        return this;
 
     }
     /**
@@ -107,7 +110,8 @@ export default class Button{
             if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
                 BACKFUN();
             }
-        }) 
+        });
+        return this;
 
     }
 }
