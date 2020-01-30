@@ -5,7 +5,8 @@
     创建图片Spriit，字体的Text
     组件Button,Collision,DOTween。
     公共部分Behaviour ， Spriit与Text继承于Behaviour
-### Game
+## Game
+#### getInstance(config) 
     /**
      * 创建一个game的单例
      * @param {}config 
@@ -15,7 +16,9 @@
      *          function updata 真更新函数
      *          objcet actionScope作用域
      */
-    * getInstance(config) 
+    * 
+    
+    ##### 示例 
     ```javascript
         import {Game} from './js/base/Game';//引入Game脚本
             let gameoConfig={ 
