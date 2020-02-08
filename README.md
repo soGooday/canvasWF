@@ -39,15 +39,17 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 ### 2019/10/12
 >canvas
 >>1-提升渲染的效率 添加了离屏cnavas
->>2-同时剔除canvasWF对zepto的依赖
 
+>>2-同时剔除canvasWF对zepto的依赖
 >webpack
+
 >>1-增加webpack对scss的支持  --方便接下来的编写案例页面使用
 
 ### 2020/01/25（大年初一 晚01：45）
 >终于在过年假的时候，有时间去思考如何封装DOTween的组件，我主要是参考了unity中的DOTween的代码书写格式与coocsCreate中的动画循环类型，同时button也封装了起来。
 >DOTween
 >>1-DOTween组件封装完成。主要是单轴x,单轴y,坐标xy的移动封装 scale的间歇动画会在下一个版本更新上放出来
+
 >Button
 >>2-同时将button功能提出封装成为Button组件。参考unity 但是
 
@@ -55,6 +57,7 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >今天将scale的动画更新了上来，但是字体在放大缩小的时候，只能通过Top Bottom Middle Alphabetic Hanging的原生方法对字体的上下锚点进行控制。 我并没有给Text添加自定义的锚点的设置，突然有了处理的办法了。我会在后期更新添加上，这样字体的缩放就不会存在问题了
 >scale
 >>1-DOTween添加scale的动画支持
+
 >优化
 >>2-将DOTween中的代码进行优化。
 
@@ -62,5 +65,12 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >今天主要是把Collision碰撞组件封装起来。 
 >>将Collision组件等装好，目前提供的是三种方法的回调 初次碰撞 物体重叠 碰撞结束
 
-### 2020/01/38
+### 2020/01/28
 >优化Game脚本中的代码
+
+### 2020/02/08
+>优化脚本中的代码
+>>Spirit与Text中的代码进行了优化
+
+>添加了子父层级了概念,Spirit与Text可以使用子父层级概念，相当于DOM中的父子节点的概念
+>>其中子节点的为xy与放大缩小会随着父节点的变化变化，正在添加父节点中rotate的变化袋中子节点中的变化

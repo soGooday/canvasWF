@@ -254,7 +254,7 @@ export class Game{
             gameInfo.indexSpritiID++;//为了防止出现重复的key
             let Iamge_ = gameInfo.allImageMap.get(spriteKey);//取到图片
             let sprit_ = new Spirit(this.content,Iamge_,spriteKey+gameInfo.indexSpritiID);//创建精灵
-            sprit_.position(positionX,positionY);
+            sprit_.setPosition(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
         } 
@@ -272,7 +272,7 @@ export class Game{
             gameInfo.indexSpritiID++;//为了防止出现重复的key
             let Iamge_ = gameInfo.allImageMap.get(spriteKey);
             let sprit_ = new Spirit(gameInfo.content,Iamge_,spriteKey+gameInfo.indexSpritiID);//创建精灵
-            sprit_.position(positionX,positionY);
+            sprit_.setPosition(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
         }
@@ -334,7 +334,7 @@ export class Game{
         gameInfo.indexFontID++;
         if(gameInfo.showFontObjMap.has(textKey) === false){
             let font_ = new Text(this.content,null,`F${gameInfo.indexFontID}`);
-            font_.position(positionX,positionY);
+            font_.setPosition(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;
         }
@@ -353,28 +353,27 @@ export class Game{
         gameInfo.indexFontID++;
         if(gameInfo.showFontObjMap.has(textKey) === false){
             let font_ = new Text(gameInfo.content,null,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
-            font_.position(positionX,positionY);
+            font_.setPosition(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;
         }
         this.waring(null,`使用createFont方法添加字体，已经存在了这个fontKsy: ${textKey}   请更换!`);
 
     }
-    /**
-     * 添加帧更新
-     */
+   /**
+   * 添加帧更新
+   * @param {string} nameFun  更新函数的唯一标识
+   * @param {function} fun 添加帧更新函数
+   */
     static addUpdataFun(nameFun,fun){
         gameInfo.eventFunMap.set(nameFun,fun);
-        // content.log('====gameInfo.eventFunMap:', gameInfo.eventFunMap);
-
-
     }
     /**
-     * 删除真更新
+     * 删除添加的帧更新的方法
+     * @param {string} nameFun 
      */
     static deleteUpdataFun(nameFun){
-        gameInfo.eventFunMap.delete(nameFun);
-        // console.log('删除这个方法',fun,gameInfo.eventFun);
+        gameInfo.eventFunMap.delete(nameFun); 
     }
 
     /**
@@ -418,9 +417,11 @@ export class Game{
 
     /**
      * 显示设备的相关参数
+     * @param {number} x 坐标的位置
+     * @param {number} y 坐标的位置
      */
-    showCanvasWH(){
-        this.showCanvasWH = this.createFont(400,50,'showCanvasWH');//创建一个字体
+    showCanvasWH(x,y){
+        this.showCanvasWH = this.createFont(x,y,'showCanvasWH');//创建一个字体
         this.showCanvasWH.fontContent('W:'+this.drawCanvas.getBoundingClientRect().width * 2+'  H:'+this.drawCanvas.getBoundingClientRect().height * 2+' drp:'+window.devicePixelRatio);//设置内容
         this.showCanvasWH.fontColor('#000000');////设置字体的颜色
         this.showCanvasWH.fontSize(26);//设置字体的大小

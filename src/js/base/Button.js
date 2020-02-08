@@ -9,12 +9,8 @@ let componentInfo={
 }
 export default class Button{
     constructor(scope){
-        componentInfo.constructor = scope;
-        console.log('bttonScope:',scope);
-    }
-  
-    //-----------------事件点击系统---------------------
-
+        componentInfo.constructor = scope; 
+    } 
     /*传入Event对象*/
     /**
      * 传入canvas 与 鼠标点击的Event
@@ -62,7 +58,7 @@ export default class Button{
     }
 
     /**
-     * 为了精灵添加点击事件
+     * 为了精灵添加点击事件--一般的 点击事件以抬起为准
      * @param BACKFUN 回调函数
      */
     addEventClick(BACKFUN){
@@ -111,7 +107,7 @@ export default class Button{
                 BACKFUN();
             }
         });
-        return this;
+        return this; 
+    } 
 
-    }
 }

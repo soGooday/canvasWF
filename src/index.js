@@ -29,23 +29,22 @@ class Demo   {
     create(){ 
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
-    
+        this.Bg.setAnchor(0,0)
+
          
 
-        this.c1 = this.game.createSprite(50,200,'c1');//创建一个小人
+        this.c1 = this.game.createSprite(200,200,'c1');//创建一个小人
         let c1Collision = this.c1.addComponent('Collision');//添加碰撞检测事件
         let c1Aniamtion = this.c1.addComponent('DOTween');//添加DOTween动画
 
         this.c2 = this.game.createSprite(600,200,'c2');//创建另外一个小人
-        this.c2.scale(-1,1);//将以Y轴进行反转 
+        this.c2.setScale(-1,1);//将以Y轴进行反转 
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
         c2Button.addEventDown(()=>{//是用BUTTON上的组件方法
             console.log('鼠标按下的事件')
         }).addEventUp(()=>{
             console.log('鼠标抬起事件');
-        })
-
-
+        }) 
         //使用碰撞组件上的相关方法
         c1Collision.collisionTarget(this.c2)//碰撞的目标
             .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件
@@ -55,9 +54,23 @@ class Demo   {
         //使用x的DOTween动画
         c1Aniamtion.DOMoveX().from().to(700)
             .setEase(Ease.Quad.easeInOut)
-            .setUseTime(1000)
-            .setLoops(2,loopType.pingqang) 
-            .DOAnimation();
+            .setUseTime(2000)
+            .setLoops(2 ,loopType.pingqang) 
+            .DO();
+        let textChilde = Game.createFontS(200,200,'textChilde');
+        textChilde.fontContent("测试位移");//设置字体的内容
+        textChilde.fontSize(40);
+         console.log('textChilde.positon:',textChilde.getPosition());
+        this.c1.addChiled(textChilde);
+        console.log('textChilde.positon:',textChilde.getPosition());
+        // //在小人进行移动的同时 进行大小的变化
+        // c1Aniamtion.DOScale().from({x:1,y:1}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
+        //     .setUseTime(1000)
+        //     .setLoops(2,loopType.pingqang) 
+        //     .setDelayed(0)
+        //     .onComplete(()=>{console.log('当前的动画执行完毕了!',text.x)})//当前的动画执行完毕的回调
+        //     .everyFrame()//期间的每帧动画的回调
+        //     .DO(); 
         //将建一个字体  this.game.createSprite = Game.createFontS（静态方法）
         let text = Game.createFontS(376,200,'text');
         text.fontContent("测试位置");//设置字体的内容
@@ -65,18 +78,14 @@ class Demo   {
         text.fontTextAlign('center'); //水平的模式
         let textAnimaiton = text.addComponent('DOTween');//给字体使用DOTween动画
         textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
-            .setUseTime(1000)
+            .setUseTime(500)
             .setLoops(2,loopType.pingqang) 
             .setDelayed(0)
-            .onComplete(()=>{console.log('当前的动画执行完毕了!',text.x)})//当前的动画执行完毕的回调
+            .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
             .everyFrame()//期间的每帧动画的回调
-            .DOAnimation();
-
-        this.game.showCanvasWH();//展示当前屏幕的相关信息 
-    }
-    //帧更新函数 这个需要的话可以使用，不需要的话，可以不使用 
-    updata(){   
-    }
+            .DO(); 
+        this.game.showCanvasWH(400,50);//展示当前屏幕的相关信息 
+    } 
 }
 new Demo();
  

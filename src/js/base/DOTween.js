@@ -451,6 +451,12 @@ export default class DOTween {
                 //使用位移的方法
                 componentInfo.self.updataMoveAmin(moveInfo); 
             }, 
+            /**
+             * 动画执行的方法
+             */
+            DO(){
+                this.DOAnimation();
+            } 
         } 
     }
        /**
