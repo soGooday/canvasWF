@@ -10,7 +10,7 @@ let componentInfo={
 export default class Button{
     constructor(scope){
         componentInfo.constructor = scope; 
-    } 
+    }  
     /*传入Event对象*/
     /**
      * 传入canvas 与 鼠标点击的Event
@@ -37,19 +37,14 @@ export default class Button{
      * @returns {boolean} 是不是点击到相关按钮了
      */
     isClick(e){
-        let son = componentInfo.constructor;
-        //比例进行矫正
-        let btnObj={
-            x:son.x*window.remscale,
-            y:son.y*window.remscale,
-        };
+        //取到相关参数
+        let son = componentInfo.constructor.getToolData(); 
         e.x = e.x*window.remscale;
         e.y = e.y*window.remscale;
 
-        let lfetX_ = btnObj.x + (son.img.width*son.SpiritInfo.imageScaleNum);
-        let rightY_ = btnObj.y  + (son.img.height*son.SpiritInfo.imageScaleNum);
-
-        if(e.x<=lfetX_ && e.x>=btnObj.x  && e.y<=rightY_ && e.y>=btnObj.y ){
+        let lfetX_ = son.x+son.width;
+        let rightY_ = son.y+son.height;  
+        if(e.x<=lfetX_ && e.x>=son.x  && e.y<=rightY_ && e.y>=son.y ){
             return true;
         }
         return false;

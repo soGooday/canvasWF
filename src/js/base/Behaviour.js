@@ -23,6 +23,15 @@ export class Behaviour {
      * 更新相关的参数设置
      */
     updata(){
+        //初始化的相关表变量
+        let upDataInit = {
+            x:false,
+            y:false,
+            scaleW:false,
+            scaleH:false, 
+            rotate:true,
+        }
+
         //检测x数值的变价
         this.setProperty(this,'x',0,(values)=>{ 
             this.synPositionX();  
@@ -38,10 +47,10 @@ export class Behaviour {
         //检测scaleH数值的变价
         this.setProperty(this,'scaleH',0,(values)=>{ 
             this.synscaleH(); 
-        }) 
+        })  
         //检测rotate数值的变价 从而处理自由物体角度与position
-        this.setProperty(this,'rotate',0,(values)=>{ 
-            this.synRotate(); 
+        this.setProperty(this,'rotate',0,(values)=>{  
+            this.synRotate(upDataInit);  
         }) 
     }
     /**
@@ -159,14 +168,27 @@ export class Behaviour {
         } 
     }
     /**
-     * 旋转的角度 rotate 
+     *  旋转的角度 rotate 
+     * @param {boolean} flistInit 
      */
-    synRotate(){
-
-
-
-
-    } 
+    synRotate(flistInit = false){ 
+        for (let index = 0; index < this.childList.length; index++) {
+            if(flistInit.rotate)  {//为了修复先添加子node后设置角度 这样会使得node.childeDValue.rotate=0 从而导致角度不对
+                this.WorldTochildRotate(this.childList[index]);//重新计算下角度
+                if(index === (this.childList.length - 1)){ 
+                    flistInit.rotate = false; 
+                } 
+            } else{
+                let node = this.childList[index];  
+                let x = Math.sin((-this.rotate)/180*Math.PI)*Math.sqrt(Math.pow(node.childeDValue.x,2)+Math.pow(node.childeDValue.y,2)); 
+                let y = Math.cos((-this.rotate)/180*Math.PI)*Math.sqrt(Math.pow(node.childeDValue.x,2)+Math.pow(node.childeDValue.y,2)); 
+                node.x = x + this.x ;
+                node.y = y + this.y ; 
+                node.rotate = this.rotate + node.childeDValue.rotate; 
+            }
+         
+        } 
+    }  
 
     /**
      * 是不是可以添加游戏物体进入子物体中
@@ -186,7 +208,8 @@ export class Behaviour {
         let y = childeObj.y  - this.y;
         let scaleW = childeObj.scaleW - this.scaleW;
         let scaleH = childeObj.scaleH - this.scaleH;
-        childeObj.childeDValue={x,y,scaleW,scaleH};//将差值存放起来 
+        let rotate = childeObj.rotate - this.rotate;
+        childeObj.childeDValue={x,y,scaleW,scaleH,rotate};//将差值存放起来 
         childeObj.x = x;
         childeObj.y = y;
     }
@@ -200,7 +223,16 @@ export class Behaviour {
         childeObj.y = childeObj.childeDValue.y + this.y;
         childeObj.scaleW = childeObj.childeDValue.scaleW + this.scaleW;
         childeObj.scaleH = childeObj.childeDValue.scaleH + this.scaleH;
-        
+        childeObj.rotate = childeObj.childeDValue.rotate + this.rotate;
+    } 
+   /**
+     * 当前的世界旋转为子node旋转
+     * @param {object} childeObj 
+     */
+    WorldTochildRotate(childeObj){ 
+        //将相关的插值记录起来 
+        let rotate = childeObj.rotate - this.rotate;
+        childeObj.childeDValue.rotate=rotate;//将差值存放起来  
     } 
 
  //----------------------------组件添加移除区---------------------------

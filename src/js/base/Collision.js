@@ -91,25 +91,12 @@ export default class Collision {
                 } 
                 return false; 
             },
-            /**
-             * 传入当前的信息 得到相应的数据  为了处理锚点而专门将xy坐标加上轴点*图片宽高进行处理  因为碰撞之中也要加上相应的锚点数值，否则加上锚点功能碰撞不准确
-             * @param {object} body 
-             */
-            getCllsionInfo(body){
-                return {
-                    x:(body.x - body.anchor.x*body.width)*window.remscale,
-                    y:(body.y - body.anchor.y*body.height)*window.remscale,
-                    width:body.width,
-                    height:body.height,
-                }
-                // return body
-            }
+            
         }
         let collisionId = this.getCollisionID(componentInfo.collisionKey);
   
-        Game.addUpdataFun(collisionId,()=> {
-        
-           let is = componentInfo.self.rectangleCollision(INFO.getCllsionInfo(bodyA),INFO.getCllsionInfo(bodyB));//检测是不是碰撞了
+        Game.addUpdataFun(collisionId,()=> { 
+         let is = componentInfo.self.rectangleCollision(bodyA.getToolData(),bodyB.getToolData());//检测是不是碰撞了 
            if(is){//检测是不是碰撞上了
                 INFO.onBeginContact();
                 INFO.incollision();
@@ -134,12 +121,7 @@ export default class Collision {
         if(body.x === null || body.y === null || body.width === null || body.height === null){
             Game.waringS('参数格式:{body{x,y,width,height}},,可以有其他的参数 但是这四个参数缺一不可');
             return;
-        }
-        // let bodyA = {x,y,width,height} =  body;
-        // let bodyB = {x,y,width,height} =  componentInfo.constructor;
-      
-      
-        console.log('当前的相关参数:bodyA',body,'bodyB',componentInfo.constructor)
+        }  
         return { 
         
             onBeginContactFun : null,//第一个碰撞回调

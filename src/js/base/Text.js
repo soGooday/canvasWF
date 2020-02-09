@@ -210,8 +210,21 @@ export class Text extends Behaviour{
      * 销毁游戏体
      */
     remvoe(){
-    this.destroy();
-    } 
+        this.destroy();
+    }  
+
+    /**
+     * 此方法是向外暴漏集合相关参数使用的
+     * 比如 碰撞  按钮点击 需要使用到这些参数
+     */
+    getToolData(){
+        return {
+            x:(this.x - this.anchor.x*this.width)*window.remscale,
+            y:(this.y - this.anchor.y*this.height)*window.remscale,
+            width:this.width,
+            height:this.height,
+        }
+    }
 
     drawResObj(){
         if(this.activeState === false){

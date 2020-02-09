@@ -57,7 +57,7 @@ export class Spirit extends Behaviour{
                 height:15,  
             }
         }
-        console.log('this.assistInfo:',this.assistInfo);
+        // console.log('this.assistInfo:',this.assistInfo);
     }
     /**
      * 初始化相关的信息
@@ -161,7 +161,7 @@ export class Spirit extends Behaviour{
      * 取到当精灵的旋转角度的度数
      * @returns {number}
      */
-    getRotateNum(){
+    getRotate(){
         return parseInt(this.rotate);
     }
 
@@ -216,6 +216,19 @@ export class Spirit extends Behaviour{
     }
 
     /**
+     * 此方法是向外暴漏集合相关参数使用的
+     * 比如 碰撞  按钮点击 需要使用到这些参数
+     */
+    getToolData(){
+        return {
+            x:this.remscale*(this.x - this.img.width*this.anchor.x),
+            y:this.remscale*(this.y - this.img.height*this.anchor.y),
+            width:this.width,
+            height:this.height,
+        }
+    }
+
+    /**
      * 绘出图片
      */
     drawResObj(){ 
@@ -262,6 +275,7 @@ export class Spirit extends Behaviour{
     }
     debugTool(){
         if(this.assistInfo.isShow){
+            //锚点的展示
             this.context.fillStyle = "red";
             this.context.fillRect((this.x-this.assistInfo.anchorBg.width/2)*this.remscale,(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,this.assistInfo.anchorBg.width,this.assistInfo.anchorBg.height)
             this.context.fillStyle = "white";

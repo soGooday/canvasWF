@@ -29,57 +29,60 @@ class Demo   {
     create(){ 
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
-   
-
-         
-
-        this.c1 = this.game.createSprite(0,200,'c1');//创建一个小人
+        this.Bg.setAnchor(0,0) ;//锚点进行设置
+        // 
+        //创建一个小人c1
+        this.c1 = this.game.createSprite(0,200,'c1');
         let c1Collision = this.c1.addComponent('Collision');//添加碰撞检测事件
         let c1Aniamtion = this.c1.addComponent('DOTween');//添加DOTween动画
-        
-        this.c2 = this.game.createSprite(500,200,'c2');//创建另外一个小人
-        // this.c2.setScale(1,-1);//将以Y轴进行反转 
+
+        //创建一个小人c2 
+        this.c2 = this.game.createSprite(650,200,'c2');
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
         c2Button.addEventDown(()=>{//是用BUTTON上的组件方法
             console.log('鼠标按下的事件')
         }).addEventUp(()=>{
             console.log('鼠标抬起事件');
         }) 
+
         //使用碰撞组件上的相关方法
         c1Collision.collisionTarget(this.c2)//碰撞的目标
-            .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件
-            .incollision(()=>{console.log('正在重叠')})
-            .onEndContact(()=>{console.log('碰撞结束');this.c2.setActive(true)})
+            .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件 刚刚碰触一次回调
+            .incollision(()=>{console.log('正在重叠')})//三种回调事件 重叠碰触次回调
+            .onEndContact(()=>{console.log('碰撞结束');this.c2.setActive(true)})//三种回调事件 重叠离开碰撞的回调
             .DO();//执行碰撞检测事件
         //使用x的DOTween动画
-        c1Aniamtion.DOMoveX().from().to(700)
-            .setEase(Ease.Linear)
-            .setUseTime(3000)
-            .setLoops(2 ,loopType.pingqang) 
-            .DO();
-        let textChilde = Game.createFontS(0,215,'textChilde');
-        textChilde.fontContent("测试位移");//设置字体的内容
-        textChilde.fontSize(40);
-        textChilde.fontTextAlign('center');
-        textChilde.fontTextBaseline('top');
-         console.log('textChilde.positon:',textChilde.getPosition());
-        this.c1.addChiled(textChilde);
-        console.log('textChilde.positon:',textChilde.getPosition());
-        // this.c1.setScale(1.3,1.3);
-        // //在小人进行移动的同时 进行大小的变化
+        c1Aniamtion.DOMoveX()//使用x轴移动
+            .from()//出发点是当前的位置 from(不填写默认是当前X轴的坐标)
+            .to(700)//前往的X轴坐标
+            .setEase(Ease.Linear)//设置动画类型
+            .setUseTime(3000)//动画完成使用的事件
+            .setLoops(2 ,loopType.pingqang)//设置执行次数与方式
+            .DO();//启动动画的执行
+        //创建一个字体
+        let textChilde = Game.createFontS(0,215,'textChilde')
+            .fontContent("测试位移")//设置字体的内容
+            .fontSize(40)//设置字体的大小
+            .fontTextAlign('center')//设置水平的左右 
+            .fontTextBaseline('top'); //设置垂直的上下
+        //将上面的字体变为c1的子node
+        this.c1.addChiled(textChilde); 
+        //给c1增加一个DOTween动画
         c1Aniamtion.DOScale().from({x:1,y:1}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
             .setUseTime(1000)
             .setLoops(2,loopType.pingqang) 
-            .setDelayed(0)
+            .setDelayed(0)//动画延时时间
             .onComplete(()=>{console.log('当前的动画执行完毕了!',text.x)})//当前的动画执行完毕的回调
             .everyFrame()//期间的每帧动画的回调
-            .DO(); 
-        //将建一个字体  this.game.createSprite = Game.createFontS（静态方法）
+            .DO(); //启动动画的执行
+        //创建一个字体
         let text = Game.createFontS(376,100,'text');
         text.fontContent("测试位置");//设置字体的内容
         text.fontSize(60).fontColor('#000000');//字体的色号
         text.fontTextAlign('center'); //水平的模式
-        let textAnimaiton = text.addComponent('DOTween');//给字体使用DOTween动画
+        //给字体添加DOTween组件
+        let textAnimaiton = text.addComponent('DOTween');
+        //使用刚刚添加组件的DOTween动画
         textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
             .setUseTime(500)
             .setLoops(2,loopType.pingqang) 
@@ -87,24 +90,30 @@ class Demo   {
             .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
             .everyFrame()//期间的每帧动画的回调
             .DO(); 
-        this.game.showCanvasWH(400,50);//展示当前屏幕的相关信息 
+    
      
-
-        this.lemon = this.game.createSprite(350,500,'lemon');//创建一个单一游戏体的背景图片
-        this.Bg.setAnchor(0,0) 
-        // this.lemon.setAnchor(0.5,0.5) 
-        // this.c1.setAnchor(0,0)
-        // this.c1.setAnchor(0.5,0.5)
-        // this.c2.setAnchor(0,0)
-
-        this.knifelogo = this.game.createSprite(350,680,'knifelogo')
+        //添加一个柠檬的素材
+        this.lemon = this.game.createSprite(350,500,'lemon');
+        //给柠檬添加一个Button的组件
+        let lemonBtn = this.lemon.addComponent('Button'); 
+        //使用Button组件的方法
+        lemonBtn.addEventDown(()=>{//是用BUTTON上的组件方法
+            this.lemon.setRotateBy(10);
+            console.log('转盘当前的角度',this.lemon.getRotate(),'当前的宽高:',this.lemon.getObjWH());
+        }) 
+        //创建出来一把刀子
+        this.knifelogo = this.game.createSprite(350,680,'knifelogo');  
+        //设置刀子的角度  为90  
+        this.knifelogo.setRotateTo(90);
+        //将刀子设为柠檬子node
         this.lemon.addChiled(this.knifelogo);
-        // this.knifelogo.setRotateTo(20);
-        this.lemon.setRotateTo(30)
+        //展示当前屏幕的相关信息 像素及其像素比
+        this.game.showCanvasWH(400,50);
     } 
 
     updata(){
-        // this.lemon.setRotateBy(1);
+        // this.lemon.setRotateBy(1);//
+        //使得柠檬的不断的转动
         this.lemon.rotate +=1;  
     }
 }
