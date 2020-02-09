@@ -6,4 +6,6 @@ export const ResList = new Set([
     ['bg1','./images/bg1.png'], 
     ['c1','./images/c1.png'], 
     ['c2','./images/c2.png'], 
+    ['lemon','./images/lemon.png'],
+    ['knifelogo','./images/knifelogo.png'],
 ]);

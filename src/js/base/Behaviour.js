@@ -65,54 +65,7 @@ export class Behaviour {
             }
         }) 
     }
-    //----------------------------组件添加移除区---------------------------
-    /**
-     * 取到当前的具体组件是什么
-     * @param {string} componentName 
-     */
-    getComponent(componentName){
-      return this._getComponent(componentName);
-    }
-    /**
-    * 添加上当前的具体的组件是什么 
-     * @param {string} componentName 
-     */
-    addComponent(componentName){
-        if( typeof componentName != 'string'){
-            game.getInstance().waring('传入的必须是string的类型'); 
-        }
-        //添加需要的组件
-        return this._addComponent(componentName);
-    }
-    /**
-     * 添加上当前的具体的组件是什么 私有的方法
-     * @param {string} componentName 
-     */
-    _addComponent(componentName){
-        if(componentName === 'DOTween'){
-            return this.DOTween = new DOTween(this); 
-
-        }else if(componentName === 'Button'){
-            return this.Button = new Button(this); 
-
-        }else if(componentName === 'Collision'){
-            return this.Collision = new Collision(this); 
-
-        }
-    }
-    /**
-     * 取到当前的具体组件是什么 私有的方法
-     * @param {string} componentName 
-     */
-    _getComponent(componentName){
-        if(componentName === 'DOTween'){
-            return this.DOTween;  
-        }else if(componentName === 'Button'){
-            return this.Button;  
-        }else if(componentName === 'Collision'){
-            return this.Collision;  
-        }
-    }
+   
     //----------------------------添加父子层级功能区-----------------------------  
     /**
      * 加入childe 子元素
@@ -250,5 +203,52 @@ export class Behaviour {
         
     } 
 
+ //----------------------------组件添加移除区---------------------------
+    /**
+     * 取到当前的具体组件是什么
+     * @param {string} componentName 
+     */
+    getComponent(componentName){
+        return this._getComponent(componentName);
+    }
+    /**
+     * 添加上当前的具体的组件是什么 
+     * @param {string} componentName 
+     */
+    addComponent(componentName){
+        if( typeof componentName != 'string'){
+            game.getInstance().waring('传入的必须是string的类型'); 
+        }
+        //添加需要的组件
+        return this._addComponent(componentName);
+      }
+      /**
+       * 添加上当前的具体的组件是什么 私有的方法
+       * @param {string} componentName 
+       */
+      _addComponent(componentName){
+        if(componentName === 'DOTween'){
+            return this.DOTween = new DOTween(this); 
 
+        }else if(componentName === 'Button'){
+            return this.Button = new Button(this); 
+
+        }else if(componentName === 'Collision'){
+            return this.Collision = new Collision(this); 
+
+        }
+      }
+      /**
+       * 取到当前的具体组件是什么 私有的方法
+       * @param {string} componentName 
+       */
+      _getComponent(componentName){
+          if(componentName === 'DOTween'){
+              return this.DOTween;  
+          }else if(componentName === 'Button'){
+              return this.Button;  
+          }else if(componentName === 'Collision'){
+              return this.Collision;  
+          }
+      }
 }

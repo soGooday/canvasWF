@@ -43,6 +43,21 @@ export class Spirit extends Behaviour{
 
         //本组件的相关参数的设计
         this.initData(context,img,ID);
+
+        let self = this ;
+        //帮助显示的相关信息
+        this.assistInfo={ 
+            isShow:true,
+            anchor:{
+                width:10,
+                height:10,  
+            },
+            anchorBg:{
+                width:15,
+                height:15,  
+            }
+        }
+        console.log('this.assistInfo:',this.assistInfo);
     }
     /**
      * 初始化相关的信息
@@ -208,41 +223,51 @@ export class Spirit extends Behaviour{
             return;
         }
         this.width = this.img.width*this.remscale;
-        this.height = this.img.height*this.remscale;
- 
+        this.height = this.img.height*this.remscale;  
         this.context.save(); 
-        let x_=this.x*this.remscale + this.width*this.anchor.x ;//算出需要移动的位置
-        let y_=this.y*this.remscale + this.height*this.anchor.y ;//算出需要
- 
-        let r_ = this.rotate * Math.PI / 180;
-        this.context.translate(x_,y_);
-        this.context.scale(this.scaleW,this.scaleH);//方法缩小
-        this.context.rotate(r_);//旋转
+        let _x = this.x*this.remscale;//算出需要移动的位置
+        let _y = this.y*this.remscale  ;//算出需要 
+        let _r = this.rotate * Math.PI / 180;
       
+        this.context.translate(_x,_y); 
+        this.context.scale(this.scaleW,this.scaleH);//方法缩小
+        this.context.rotate(_r);//旋转   
+        this.context.translate(-_x,-_y);
         this.context.globalAlpha = this.alpha;
-        this.context.translate(-x_,-y_);
+        
+        
         //这个是简短的绘制图标的方式
-        this.context.drawImage(
-            this.img,
-            this.x*this.remscale,
-            this.y*this.remscale,
-            this.width,//展示出来图片的宽
-            this.height ,//展示出来图片的高
-        ); 
-        ///这个是可以实现雪碧图的更多绘制的方式
         // this.context.drawImage(
         //     this.img,
-        //     0,
-        //     0,
-        //     this.img.width,
-        //     this.img.height, 
-        //     this.x*window.remscale - this.height*this.anchor.x,
-        //     this.y*window.remscale - this.height*this.anchor.y,
-        //     this.width,
-        //     this.height
-        // );  
+        //     this.x*this.remscale,
+        //     this.y*this.remscale,
+        //     this.width,//展示出来图片的宽
+        //     this.height ,//展示出来图片的高
+        // ); 
+        // /这个是可以实现雪碧图的更多绘制的方式
+        this.context.drawImage(
+            this.img,
+            0,
+            0,
+            this.img.width,
+            this.img.height, 
+            this.remscale*(this.x - this.img.width*this.anchor.x),
+            this.remscale*(this.y - this.img.height*this.anchor.y),
+            this.width,
+            this.height
+        );  
         this.context.restore();
-
+        this.debugTool();
+       
+    }
+    debugTool(){
+        if(this.assistInfo.isShow){
+            this.context.fillStyle = "red";
+            this.context.fillRect((this.x-this.assistInfo.anchorBg.width/2)*this.remscale,(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,this.assistInfo.anchorBg.width,this.assistInfo.anchorBg.height)
+            this.context.fillStyle = "white";
+            this.context.fillRect((this.x-this.assistInfo.anchor.width/2)*this.remscale,(this.y-this.assistInfo.anchor.height/2)*this.remscale,this.assistInfo.anchor.width,this.assistInfo.anchor.height)
+            
+        } 
     }
 
 
