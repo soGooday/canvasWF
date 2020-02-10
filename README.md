@@ -93,3 +93,6 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 ### 2020/02/10
 >处理放大缩小的问题 
 >>将放大缩小纳入锚点的范畴. 之前使用的是 canvas自带的`translate与scale`，改为了使用 `drawImage`的API进行控制 图片的大小
+
+>Text的锚点
+>>之前子啊修改Spirit的锚点的时候，就像过将Text的锚点也进行同样处理。rotate scale position 其中今天处理好了position的功能 剩余会在后面更新上线

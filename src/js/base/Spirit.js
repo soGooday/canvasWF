@@ -45,7 +45,7 @@ export class Spirit extends Behaviour{
         //本组件的相关参数的设计
         this.initData(context,img,ID);
 
-        let self = this ;
+    
         //帮助显示的相关信息
         this.assistInfo={ 
             isShow:true,

@@ -77,20 +77,24 @@ class Demo   {
             .everyFrame()//期间的每帧动画的回调
             .DO(); //启动动画的执行
         //创建一个字体
-        let text = Game.createFontS(376,100,'text');
+        let text = Game.createFontS(100,100,'text');
         text.fontContent("测试位置");//设置字体的内容
         text.fontSize(60).fontColor('#000000');//字体的色号
-        text.fontTextAlign('center'); //水平的模式
+        // text.fontTextAlign('center'); //水平的模式
+        // text.setAnchor(0.5,0.5);
+        text.setRotateTo(50);
+        // text.setScale(1.5,1.5);
+        // text.setPosition(0,100-60/8*1)
         //给字体添加DOTween组件
         let textAnimaiton = text.addComponent('DOTween');
         //使用刚刚添加组件的DOTween动画
-        textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
-            .setUseTime(500)
-            .setLoops(2,loopType.pingqang) 
-            .setDelayed(0)
-            .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
-            .everyFrame()//期间的每帧动画的回调
-            .DO(); 
+        // textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
+        //     .setUseTime(500)
+        //     .setLoops(2,loopType.pingqang) 
+        //     .setDelayed(0)
+        //     .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
+        //     .everyFrame()//期间的每帧动画的回调
+        //     .DO(); 
     
      
         //添加一个柠檬的素材
