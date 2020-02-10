@@ -67,6 +67,7 @@ class Demo   {
             .fontTextBaseline('top'); //设置垂直的上下
         //将上面的字体变为c1的子node
         this.c1.addChiled(textChilde); 
+        // this.c1.setScale(1.5,1.5);
         //给c1增加一个DOTween动画
         c1Aniamtion.DOScale().from({x:1,y:1}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
             .setUseTime(1000)

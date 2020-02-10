@@ -4,9 +4,9 @@
 
 本地运行：`npm run dev`
  
-测试服：`pm run build:d` 
+测试服：  `npm run build:d` 
 
-正式服：`pm run build:p`
+正式服：  `npm run build:p`
 
  
 csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
@@ -33,6 +33,10 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >我最终开始将这个canvasWF的定位在了互动页面方向。同时也开始了组件的开发方式。会存在DOTween Button ParticleEffect Collision 也在思考要不要将Image 与Text 也封装起来。好处是开发逻辑非常清晰。有利于之后的组件扩展。不好的是页面的互动。过于组件话会导致开发啰嗦与重复，框架的目的是尽可能帮助减少开发时间，这样就有些违背目的了。
 
 >当前并不存在创景的概念与相机的概念，如果你想时间多场景的，可以将资源装进数组中，或者Group中，从而统一对场景进行处理
+
+>当前维护与使用的脚本路径再 `src/js/base`  而 `src/js/component` 下的脚本实在 `src/js/base` 路径下的脚本上封装的。并不是当前版本的一部分
+
+>如果你运行工程会发现一个白色正方形(红色描边)在图片素材的中间，这个就是锚点与DCM中的锚点概念一样 是定位素材位置的基点 所有的位置 旋转 放大缩小都是以这个点为基点进行相应的变化
 
 ### 2019/10/10
 >之前的是集成在vue上面的，感觉这样并不太好用，所以我就把他重新继承在webpack上,不过我仅仅添加了js的plugin插件的使用。我在后面的开发的时候会继续添加对html与图片压缩的组件，包括其他的webpack的其他的plugin及其loader的添加
@@ -85,3 +89,7 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 
 >添加了子父层级中随着父物体的角度变化，子物体会随着父物体一起变化。
 >>子物体会随着父物体一起转动，包括同时坐标与角度。角度发生变化时会初始化一次角度。
+
+### 2020/02/10
+>处理放大缩小的问题 
+>>将放大缩小纳入锚点的范畴. 之前使用的是 canvas自带的`translate与scale`，改为了使用 `drawImage`的API进行控制 图片的大小

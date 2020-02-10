@@ -11,6 +11,7 @@ export class Spirit extends Behaviour{
         this.remscale = window.remscale;//缩放的大小参数 
         this.activeState = true;//画图 
         this.objectID = ID;
+        console.log('ID:',ID,'this.img:',img);
 
 
         //相关的参数
@@ -221,8 +222,8 @@ export class Spirit extends Behaviour{
      */
     getToolData(){
         return {
-            x:this.remscale*(this.x - this.img.width*this.anchor.x),
-            y:this.remscale*(this.y - this.img.height*this.anchor.y),
+            x:this.remscale*(this.x - this.img.width*this.anchor.x*this.scaleW),
+            y:this.remscale*(this.y - this.img.height*this.anchor.y*this.scaleH),
             width:this.width,
             height:this.height,
         }
@@ -235,15 +236,15 @@ export class Spirit extends Behaviour{
         if(this.activeState === false){
             return;
         }
-        this.width = this.img.width*this.remscale;
-        this.height = this.img.height*this.remscale;  
+        this.width = this.img.width*this.remscale*this.scaleW;
+        this.height = this.img.height*this.remscale*this.scaleH;  
+
         this.context.save(); 
         let _x = this.x*this.remscale;//算出需要移动的位置
         let _y = this.y*this.remscale  ;//算出需要 
-        let _r = this.rotate * Math.PI / 180;
-      
+        let _r = this.rotate * Math.PI / 180; 
         this.context.translate(_x,_y); 
-        this.context.scale(this.scaleW,this.scaleH);//方法缩小
+        // this.context.scale(this.scaleW,this.scaleH);//方法缩小
         this.context.rotate(_r);//旋转   
         this.context.translate(-_x,-_y);
         this.context.globalAlpha = this.alpha;
@@ -264,13 +265,16 @@ export class Spirit extends Behaviour{
             0,
             this.img.width,
             this.img.height, 
-            this.remscale*(this.x - this.img.width*this.anchor.x),
-            this.remscale*(this.y - this.img.height*this.anchor.y),
+            this.remscale*(this.x - this.img.width*this.anchor.x*this.scaleW ),
+            this.remscale*(this.y - this.img.height*this.anchor.y*this.scaleH ),
             this.width,
             this.height
         );  
         this.context.restore();
         this.debugTool();
+        // if( this.objectID === 'c12'){
+        //     console.log({width:this.img.width,height:this.img.height})
+        // }
        
     }
     debugTool(){
