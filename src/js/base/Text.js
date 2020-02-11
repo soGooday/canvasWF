@@ -41,7 +41,7 @@ export class Text extends Behaviour{
         this.initData(context,text,ID)
        
         this.assistInfo={ 
-            isShow:true,
+            isShow:false,
             anchor:{
                 width:10,
                 height:10,  
@@ -280,7 +280,9 @@ export class Text extends Behaviour{
         if(this.activeState === false){
             return;
         } 
-       
+        //时刻更新字体的宽与高
+        this.width = (this.fontWidth||1)* this.remscale*this.scaleW
+        this.height =this.fontSizeNumder * this.remscale*this.scaleW
         //下面备注掉的是本想给字体添加锚点的设置 又因为原生提供的垂直与行的原生方法，能够实现基本的需求，于是便没有封装。如果你看到这个注释，你需要需要哦这个需求
         //我的思路是，将我上面封装的关于横向与纵向的模式改成坐标的位置从而实现，放弃原生的API--fontTextBaselineType与fontTextAlignType 我下面的注释已经帮助你完成
         //你需要知道的关于字体的宽与高的方法 
@@ -302,6 +304,7 @@ export class Text extends Behaviour{
         this.context.globalAlpha = this.alphaNum;//透明度
         this.context.fillStyle = this.colorNum;//字体颜色
         this.context.font = this.fontSizeNum  +' '+ this.fontStyleContent +' '+'黑体';
+        //因为已经有了锚点的就不需要在使用元canvas提供的textAlign与textBaseline的api
         // this.context.textAlign = this.fontTextAlignType;// 设置水平对齐方式
         // this.context.textBaseline = this.fontTextBaselineType; // 设置垂直对齐方式 
         this.context.fillText(this.text, _translateX, _translateY);
@@ -312,26 +315,23 @@ export class Text extends Behaviour{
 
         this.context.restore();
         this.debugTool();
-    }
-    // debugTool(){
-    //     if(this.assistInfo.isShow){
-    //         //锚点的展示
-    //         this.context.fillStyle = "red";
-    //         this.context.fillRect(this.getToolData().x,this.getToolData().y,this.getToolData().width,this.getToolData().height)
-    //         this.context.fillStyle = "white";
-    //         this.context.fillRect(this.getToolData().x,this.getToolData().x.y,this.getToolData().width+10,this.getToolData().height+10)
-            
-    //     } 
-    // }
+    } 
+    //调试工具
     debugTool(){
         if(this.assistInfo.isShow){
             //锚点的展示
             this.context.fillStyle = "blue";
             this.context.fillRect((this.x-this.assistInfo.anchorBg.width/2)*this.remscale,(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,this.assistInfo.anchorBg.width,this.assistInfo.anchorBg.height)
             this.context.fillStyle = "white";
-            this.context.fillRect((this.x-this.assistInfo.anchor.width/2)*this.remscale,(this.y-this.assistInfo.anchor.height/2)*this.remscale,this.assistInfo.anchor.width,this.assistInfo.anchor.height)
-            
+            this.context.fillRect((this.x-this.assistInfo.anchor.width/2)*this.remscale,(this.y-this.assistInfo.anchor.height/2)*this.remscale,this.assistInfo.anchor.width,this.assistInfo.anchor.height) 
         } 
+    }
+    /**
+     * 是否打开调试工具 当前是仅仅显示的是 锚点
+     * @param {bool} bool 
+     */
+    setDebugTool(bool){
+        this.assistInfo.isShow = bool;
     }
    
 

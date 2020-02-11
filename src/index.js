@@ -7,7 +7,7 @@ import "./index.css";
 
 import {Game} from './js/base/Game';//引入Game脚本
 import {Ease,loopType} from './js/base/DOTween'//引入Ease loopType用于设置动画组件 
-import {ResList} from './ResList'; 
+import {ResList} from './ResList'; //资源加载器
 
 class Demo   {
     constructor(){
@@ -30,7 +30,8 @@ class Demo   {
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
         this.Bg.setAnchor(0,0) ;//锚点进行设置
-        // 
+        this.Bg.setDebugTool(true);//显示锚点方便测试
+
         //创建一个小人c1
         this.c1 = this.game.createSprite(0,200,'c1');
         let c1Collision = this.c1.addComponent('Collision');//添加碰撞检测事件
@@ -38,6 +39,7 @@ class Demo   {
 
         //创建一个小人c2 
         this.c2 = this.game.createSprite(650,200,'c2');
+        this.c2.setDebugTool(true);//显示锚点方便测试
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
         c2Button.addEventDown(()=>{//是用BUTTON上的组件方法
             console.log('鼠标按下的事件')
@@ -68,6 +70,7 @@ class Demo   {
             .fontTextBaseline('top'); //设置垂直的上下
         //将上面的字体变为c1的子node
         this.c1.addChiled(textChilde); 
+        this.c1.setDebugTool(true);
         // this.c1.setScale(1.5,1.5);
         //给c1增加一个DOTween动画
         c1Aniamtion.DOScale().from({x:1,y:1}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
@@ -85,6 +88,7 @@ class Demo   {
         text.setAnchor(1,1);//锚点设置为欸右下角
         text.setRotateTo(0);
         this.text1 = text;
+        this.text1.setDebugTool(true);//打开锚点测试
         // text.setScale(1.5,1.5);
         // text.setPosition(0,100-60/8*1)
         //给字体添加DOTween组件

@@ -105,6 +105,6 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 
 ### 2020/02/11
 >Text的锚点
->>将rotate scale position 其中剩余的部分rotate scale也处理完毕了。
+>>将rotate scale position 其中剩余的部分rotate scale也处理完毕了。因为已经有了锚点系统的就不需要在使用元canvas提供的textAlign与textBaseline的api
 
 >到现在为止，一个工具应有的基础功能已经存在了。剩余就是扩充功能了，目前在不压缩的情况下是114K

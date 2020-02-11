@@ -11,7 +11,7 @@ export class Spirit extends Behaviour{
         this.remscale = window.remscale;//缩放的大小参数 
         this.activeState = true;//画图 
         this.objectID = ID;
-        console.log('ID:',ID,'this.img:',img);
+    
 
 
         //相关的参数
@@ -48,7 +48,7 @@ export class Spirit extends Behaviour{
     
         //帮助显示的相关信息
         this.assistInfo={ 
-            isShow:true,
+            isShow:false,
             anchor:{
                 width:10,
                 height:10,  
@@ -271,10 +271,7 @@ export class Spirit extends Behaviour{
             this.height
         );  
         this.context.restore();
-        this.debugTool();
-        // if( this.objectID === 'c12'){
-        //     console.log({width:this.img.width,height:this.img.height})
-        // }
+        this.debugTool(); 
        
     }
     debugTool(){
@@ -288,7 +285,14 @@ export class Spirit extends Behaviour{
         } 
     }
 
-
+    /**
+     * 是否打开调试工具 当前是仅仅显示的是 锚点
+     * @param {bool} bool 
+     */
+    setDebugTool(bool){
+        this.assistInfo.isShow = bool;
+    }
+   
 
  
   
