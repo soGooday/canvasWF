@@ -62,8 +62,9 @@ class Demo   {
         //创建一个字体
         let textChilde = Game.createFontS(0,215,'textChilde')
             .fontContent("测试位移")//设置字体的内容
-            .fontSize(40)//设置字体的大小
-            .fontTextAlign('center')//设置水平的左右 
+            .fontSize(60)//设置字体的大小
+            .fontTextAlign('center')//设置水平的左右
+            .setAnchor(0.5,0.5)
             .fontTextBaseline('top'); //设置垂直的上下
         //将上面的字体变为c1的子node
         this.c1.addChiled(textChilde); 
@@ -77,12 +78,13 @@ class Demo   {
             .everyFrame()//期间的每帧动画的回调
             .DO(); //启动动画的执行
         //创建一个字体
-        let text = Game.createFontS(100,100,'text');
+        let text = Game.createFontS(357,500,'text');
         text.fontContent("测试位置");//设置字体的内容
         text.fontSize(60).fontColor('#000000');//字体的色号
         // text.fontTextAlign('center'); //水平的模式
-        // text.setAnchor(0.5,0.5);
-        text.setRotateTo(50);
+        text.setAnchor(1,1);//锚点设置为欸右下角
+        text.setRotateTo(0);
+        this.text1 = text;
         // text.setScale(1.5,1.5);
         // text.setPosition(0,100-60/8*1)
         //给字体添加DOTween组件
@@ -104,7 +106,7 @@ class Demo   {
         //使用Button组件的方法
         lemonBtn.addEventDown(()=>{//是用BUTTON上的组件方法
             this.lemon.setRotateBy(10);
-            console.log('转盘当前的角度',this.lemon.getRotate(),'当前的宽高:',this.lemon.getObjWH());
+            this.text1.setRotateBy(10); 
         }) 
         //创建出来一把刀子
         this.knifelogo = this.game.createSprite(350,680,'knifelogo');  
@@ -119,7 +121,9 @@ class Demo   {
     updata(){
         // this.lemon.setRotateBy(1);//
         //使得柠檬的不断的转动
-        this.lemon.rotate +=1;  
+        // this.lemon.rotate +=1;  
+        this.lemon.setRotateBy(1);
+        // this.text1.setRotateBy(5);
     }
 }
 new Demo();

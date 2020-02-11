@@ -273,14 +273,13 @@ export class Text extends Behaviour{
             width:this.width,
             height:this.height,
         }
-    }
+    } 
+
 
     drawResObj(){
         if(this.activeState === false){
             return;
-        }
-        // this.width = this.context.measureText(this.text).width*this.remscale;
-        // this.height = this.fontSizeNumder*this.remscale;
+        } 
        
         //下面备注掉的是本想给字体添加锚点的设置 又因为原生提供的垂直与行的原生方法，能够实现基本的需求，于是便没有封装。如果你看到这个注释，你需要需要哦这个需求
         //我的思路是，将我上面封装的关于横向与纵向的模式改成坐标的位置从而实现，放弃原生的API--fontTextBaselineType与fontTextAlignType 我下面的注释已经帮助你完成
@@ -288,21 +287,24 @@ export class Text extends Behaviour{
         //字体的宽 this.context.measureText(this.text).width
         //字体的高 this.fontSizeNumder
         //是可以明确的是 字体原生的锚点在不在左上角 而是 x=左边 y=左下角的8/7处
-    
-        let translateX = (this.x - (this.fontWidth||1)*this.anchor.x)* this.remscale;
-        let translateY = (this.y + this.fontSizeNumder/8*7 - this.fontSizeNumder*this.anchor.y)*this.remscale;
+        //这个是为了将锚点放在中处理的
+        let _translateX = (this.x - (this.fontWidth||1)*this.anchor.x) * this.remscale;
+        let _translateY = (this.y + this.fontSizeNumder/8*7 - this.fontSizeNumder*this.anchor.y) * this.remscale;
+        //这个是旋转
+        let translateX =(this.x)*this.remscale;
+        let translateY =(this.y)*this.remscale; 
         this.context.save();  
-        this.context.translate(translateX,translateY); 
         let _r = this.rotate * Math.PI / 180; 
+        this.context.translate(translateX,translateY);  
         this.context.rotate(_r);//旋转   
+        this.context.scale(this.scaleW,this.scaleH);//方法缩小
+        this.context.translate(-translateX,-translateY); 
         this.context.globalAlpha = this.alphaNum;//透明度
         this.context.fillStyle = this.colorNum;//字体颜色
         this.context.font = this.fontSizeNum  +' '+ this.fontStyleContent +' '+'黑体';
         // this.context.textAlign = this.fontTextAlignType;// 设置水平对齐方式
-        // this.context.textBaseline = this.fontTextBaselineType; // 设置垂直对齐方式
-        this.context.scale(this.scaleW,this.scaleH);//方法缩小
-        this.context.translate(-translateX,-translateY); 
-        this.context.fillText(this.text, translateX, translateY);
+        // this.context.textBaseline = this.fontTextBaselineType; // 设置垂直对齐方式 
+        this.context.fillText(this.text, _translateX, _translateY);
         this.fontWidth = this.context.measureText(this.text).width;//获得字体的宽度
         //计算出来宽高
         this.width = this.context.measureText(this.text).width*this.remscale;

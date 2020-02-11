@@ -227,7 +227,7 @@ export class Spirit extends Behaviour{
             width:this.width,
             height:this.height,
         }
-    }
+    } 
 
     /**
      * 绘出图片
