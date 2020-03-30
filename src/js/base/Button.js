@@ -1,15 +1,19 @@
 
 import {Game, gameInfo} from './Game';
+import GameObject from './GameObject';
 /**
  * 当前组件的信息
- */
-let componentInfo={
-    constructor:null,//当初实力本组件的原型 
-    self:null,//当前的作用域
-}
+ */ 
+//存放添加了button事件的相关的节点
+let bttonEventDownList=[]
 export default class Button{
     constructor(scope){
-        componentInfo.constructor = scope; 
+        this.componentInfo={
+            constructor:null,//当初实力本组件的原型 
+            self:null,//当前的作用域
+        }
+        this.componentInfo.constructor = scope;  
+
     }  
     /*传入Event对象*/
     /**
@@ -38,12 +42,13 @@ export default class Button{
      */
     isClick(e){
         //取到相关参数
-        let son = componentInfo.constructor.getToolData(); 
-        e.x = e.x*window.remscale;
-        e.y = e.y*window.remscale;
+        let son = this.componentInfo.constructor.getToolData(); 
+        e.x = e.x;
+        e.y = e.y; 
+        
 
         let lfetX_ = son.x+son.width;
-        let rightY_ = son.y+son.height;  
+        let rightY_ = son.y+son.height;   
         if(e.x<=lfetX_ && e.x>=son.x  && e.y<=rightY_ && e.y>=son.y ){
             return true;
         }
@@ -53,56 +58,72 @@ export default class Button{
     }
 
     /**
-     * 为了精灵添加点击事件--一般的 点击事件以抬起为准
+     * 给精灵添加点击事件--一般的 点击事件以抬起为准
      * @param BACKFUN 回调函数
      */
-    addEventClick(BACKFUN){
-        gameInfo.drawCanvas.addEventListener('click',e=>{
-            if(this.isClick(this.getPoint(gameInfo.drawCanvas,e)) === true){
-                BACKFUN();
-            }
-        },false);
-        return this;
-    }
+    addEventClick(BACKFUN){ 
+        this.addEventUp((event)=>{
+            BACKFUN(event);
+        })
+    } 
     /**
-     * 为了精灵添加点鼠标悬浮的事件
-     * @param BACKFUN 回调函数
-     */
-    addEventSuspension(BACKFUN){
-        this.addEventDown(()=>{
-            if(gameInfo.eventFun.has(this.spritName) === false){
-                gameInfo.eventFun.add([this.spritName,BACKFUN]);
-            }else {
-                new  Error('此精灵已经调取了这个方法了,不可以添加了');
-            }
-        });
-        return this;
-
-    }
-    /**
-     * 为了精灵添加点鼠标按下的事件
-     * @param BACKFUN 回调函数
+     * 给精灵添加点鼠标按下的事件
+     * @param {Function} BACKFUN 回调函数
      */
     addEventDown(BACKFUN){
         gameInfo.drawCanvas.addEventListener('touchstart', (event) => {
             if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
-                BACKFUN();
+                BACKFUN(event);
             }
         });
         return this;
 
     }
     /**
-     * 为了精灵添加点鼠标抬起件事件
-     * @param BACKFUN 回调函数
+     * 给精灵添加点鼠标抬起件事件
+     * @param {Function} BACKFUN 回调函数
      */
     addEventUp(BACKFUN){
         gameInfo.drawCanvas.addEventListener('touchend', (event) => {
             if(this.isClick(this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])) === true){
-                BACKFUN();
+                BACKFUN(event);
             }
         });
         return this; 
     } 
+    /**
+     * 鼠标拖动事件
+     * @param {Function} BACKFUN 
+     */
+    addMoveEvent(BACKFUN){
+        gameInfo.drawCanvas.addEventListener('touchmove', (event) => { 
+            let position = this.getPoint(gameInfo.drawCanvas,event.changedTouches[event.changedTouches.length-1])
+            if(this.isClick(position)){
+                BACKFUN(event);
+            }
+        });
+        return this; 
+    }
+    /**
+     * 按钮点击的事件
+     * @param {Function} event 
+     */
+    addEventDownFun(event){
+        console.log('event:',event)
+        var eventInfo = {
+            activeState :this.componentInfo.constructor.activeState,   
+            eventFun:event
+        }
+        bttonEventDownList.unshift(eventInfo); 
+    }
+   /**
+    * 得到当前的按钮点击事件 
+    */
+    getEventDownFun(){
+        let eventInfo = bttonEventDownList.find(eventInfo=> eventInfo.activeState === true ) 
+        return eventInfo.eventFun;
+
+    }
+
 
 }

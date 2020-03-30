@@ -108,3 +108,9 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >>将rotate scale position 其中剩余的部分rotate scale也处理完毕了。因为已经有了锚点系统的就不需要在使用元canvas提供的textAlign与textBaseline的api
 
 >到现在为止，一个工具应有的基础功能已经存在了。剩余就是扩充功能了，目前在不压缩的情况下是114K
+
+### 2020/03/27
+>button
+>>修复之前的按钮点击区域bug,添加touchmove事件，方便制作互动中的鼠标或者手指的拖动物体
+
+

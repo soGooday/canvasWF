@@ -42,6 +42,7 @@ body {
     font-family: 'Heiti SC';
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    /*iphone6的情况下 font-size 是20px */
     font-size: 14px; 
     overflow: hidden;
 }

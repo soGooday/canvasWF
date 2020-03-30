@@ -11,7 +11,7 @@ export class Spirit extends Behaviour{
         this.remscale = window.remscale;//缩放的大小参数 
         this.activeState = true;//画图 
         this.objectID = ID;
-    
+        this.SpiritKey = ID.split('_')[0]
 
 
         //相关的参数
@@ -48,7 +48,7 @@ export class Spirit extends Behaviour{
     
         //帮助显示的相关信息
         this.assistInfo={ 
-            isShow:false,
+            isShowAnchor:false,
             anchor:{
                 width:10,
                 height:10,  
@@ -56,8 +56,10 @@ export class Spirit extends Behaviour{
             anchorBg:{
                 width:15,
                 height:15,  
-            }
+            },
+            isShowBorderBox:false,
         }
+        this.showBorderBox()
         // console.log('this.assistInfo:',this.assistInfo);
     }
     /**
@@ -227,6 +229,13 @@ export class Spirit extends Behaviour{
             width:this.width,
             height:this.height,
         }
+ 
+        // return {
+        //     x:(this.x-this.assistInfo.anchorBg.width/2)*this.remscale,
+        //     y:(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,
+        //     width:this.width,
+        //     height:this.height,
+        // }
     } 
 
     /**
@@ -240,6 +249,7 @@ export class Spirit extends Behaviour{
         this.height = this.img.height*this.remscale*this.scaleH;  
 
         this.context.save(); 
+       
         let _x = this.x*this.remscale;//算出需要移动的位置
         let _y = this.y*this.remscale  ;//算出需要 
         let _r = this.rotate * Math.PI / 180; 
@@ -249,7 +259,7 @@ export class Spirit extends Behaviour{
         this.context.translate(-_x,-_y);
         this.context.globalAlpha = this.alpha;
         
-        
+        // this. showBorderBox();
         //这个是简短的绘制图标的方式
         // this.context.drawImage(
         //     this.img,
@@ -270,19 +280,40 @@ export class Spirit extends Behaviour{
             this.width,
             this.height
         );  
-        this.context.restore();
+
+        this.showBorderBox()
         this.debugTool(); 
+        this.context.restore();
+        // this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
+        // this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
        
     }
+    /**默认显示的调整的工具 */
     debugTool(){
-        if(this.assistInfo.isShow){
-            //锚点的展示
-            this.context.fillStyle = "red";
-            this.context.fillRect((this.x-this.assistInfo.anchorBg.width/2)*this.remscale,(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,this.assistInfo.anchorBg.width,this.assistInfo.anchorBg.height)
-            this.context.fillStyle = "white";
-            this.context.fillRect((this.x-this.assistInfo.anchor.width/2)*this.remscale,(this.y-this.assistInfo.anchor.height/2)*this.remscale,this.assistInfo.anchor.width,this.assistInfo.anchor.height)
-            
+        if(!this.assistInfo.isShowAnchor){
+            return
         } 
+        //锚点的展示
+        this.context.fillStyle = "red";
+        this.context.fillRect((this.x-this.assistInfo.anchorBg.width/2)*this.remscale,(this.y-this.assistInfo.anchorBg.height/2)*this.remscale,this.assistInfo.anchorBg.width,this.assistInfo.anchorBg.height)
+        this.context.fillStyle = "white";
+        this.context.fillRect((this.x-this.assistInfo.anchor.width/2)*this.remscale,(this.y-this.assistInfo.anchor.height/2)*this.remscale,this.assistInfo.anchor.width,this.assistInfo.anchor.height)
+  
+     
+    }
+    /**将素材的边框绘制出来 */
+    showBorderBox(){
+        if(!this.assistInfo.isShowBorderBox){
+            return
+        }
+        this.context.strokeStyle = 'red';
+        this.context.lineWidth = 1;
+        this.context.moveTo(this.getToolData().x,this.getToolData().y);
+        this.context.lineTo(this.getToolData().x+this.getToolData().width, this.getToolData().y);
+        this.context.lineTo(this.getToolData().x+this.getToolData().width, this.getToolData().y+this.getToolData().height);
+        this.context.lineTo(this.getToolData().x, this.getToolData().y+this.getToolData().height);
+        this.context.lineTo(this.getToolData().x,this.getToolData().y); 
+        this.context.stroke();
     }
 
     /**
@@ -290,9 +321,15 @@ export class Spirit extends Behaviour{
      * @param {bool} bool 
      */
     setDebugTool(bool){
-        this.assistInfo.isShow = bool;
+        this.assistInfo.isShowAnchor = bool;
     }
-   
+    /**
+     * 是否打开调试工具 显示素材的边框
+     * @param {bool} bool 
+     */
+    setBorderBoxDebugTool(bool){
+        this.assistInfo.isShowBorderBox = bool;
+    }
 
  
   

@@ -328,8 +328,8 @@ export default class DOTween {
             fromNum : null,//出发的位置  必填
             toNum : null,//目标的位置 必填
             xORy:'x',//动画控制的变量 默认是x轴
-            easeFun : null,//当前的动画效果 必填
-            useTimeNum : 100,//默认是1000毫秒的时间
+            easeFun : Ease.Linear,//当前的动画效果 必填
+            useTimeNum : 1000,//默认是1000毫秒的时间
             loopsNum : 0,//循环的次数 默认无数次的循环0 
             loopsMode:loopType.fromTo,//默认是正常的模式
             delayedNum : 0,//延迟的当前的时间是多少 单位是毫秒
@@ -701,14 +701,7 @@ export default class DOTween {
             BACK();
         }
     }
-
-    
-    // function getInstance(){
-    //     if( !DOTWeen.instance ){
-    //         DOTWeen.instance = new DOTWeen();
-    //     }
-    //     return DOTWeen.instance;
-    // }
+ 
     /**
      * 
      * @param {number} from 出发点

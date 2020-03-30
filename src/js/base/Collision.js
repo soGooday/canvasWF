@@ -14,6 +14,7 @@ export default class Collision {
         this.TypeName ='Collision';
         componentInfo.constructor = scope;
         componentInfo.self = this; 
+        this.CollisionUpDataID = null;
     }
     /**
      * 得当仅仅属于当前动画的以恶个id 因为一个活动可能动画会触发很多活动
@@ -85,7 +86,7 @@ export default class Collision {
             /**
              * 之前是不是精力过了碰撞
              */
-            onEndStatus(){
+            onEndStatus(){ 
                 if(this.start === true && this.startFrist === true && this.int === true){
                     return true
                 } 
@@ -94,7 +95,7 @@ export default class Collision {
             
         }
         let collisionId = this.getCollisionID(componentInfo.collisionKey);
-  
+        this.CollisionUpDataID = collisionId;
         Game.addUpdataFun(collisionId,()=> { 
          let is = componentInfo.self.rectangleCollision(bodyA.getToolData(),bodyB.getToolData());//检测是不是碰撞了 
            if(is){//检测是不是碰撞上了
@@ -216,6 +217,12 @@ export default class Collision {
             bodyB.x + bodyB.width < bodyA.x || 
             bodyA.y + bodyA.height < bodyB.y || 
             bodyB.y + bodyB.height < bodyA.y);
+    }
+    /**
+     * 移除碰撞组件
+     */
+    removeComponent(){ 
+        Game.deleteUpdataFun(this.CollisionUpDataID)
     }
 
 

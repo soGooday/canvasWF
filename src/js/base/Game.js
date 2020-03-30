@@ -9,7 +9,7 @@ export let gameInfo={
     showImageObjMap:null,//显示在舞台上的图片
     showFontObjMap:null,//显示出来相关的字体
     showGroupObjSet:null,//专门存放group的set
-    eventFun:null,//事件方法
+    eventFunMap:null,//事件方法
     waringLogo:'m( =∩ω∩= )m:',//提示的标题
     sceneW:0,
     sceneH:0,
@@ -195,8 +195,7 @@ export class Game{
             this.loadIamge(x[0],x[1],()=>{
                 resMapL++;
                 if(resMapL>=FileSet.size){
-                    if(BACKfUN!=null && typeof BACKfUN === 'function'){
-                        
+                    if(BACKfUN!=null && typeof BACKfUN === 'function'){ 
                         BACKfUN();
                     }
                     if(updataBACKFun!=null && typeof updataBACKFun === 'function'){
@@ -253,7 +252,7 @@ export class Game{
         if(gameInfo.allImageMap.has(spriteKey) === true){//检测加载好的资源里面是不是存在这个精灵
             gameInfo.indexSpritiID++;//为了防止出现重复的key
             let Iamge_ = gameInfo.allImageMap.get(spriteKey);//取到图片
-            let sprit_ = new Spirit(this.content,Iamge_,spriteKey+gameInfo.indexSpritiID);//创建精灵
+            let sprit_ = new Spirit(this.content,Iamge_,spriteKey+'_'+gameInfo.indexSpritiID);//创建精灵
             sprit_.setPosition(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
@@ -271,7 +270,7 @@ export class Game{
         if(gameInfo.allImageMap.has(spriteKey) === true){
             gameInfo.indexSpritiID++;//为了防止出现重复的key
             let Iamge_ = gameInfo.allImageMap.get(spriteKey);
-            let sprit_ = new Spirit(gameInfo.content,Iamge_,spriteKey+gameInfo.indexSpritiID);//创建精灵
+            let sprit_ = new Spirit(gameInfo.content,Iamge_,spriteKey+'_'+gameInfo.indexSpritiID);//创建精灵
             sprit_.setPosition(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
@@ -306,6 +305,8 @@ export class Game{
             createBack.create();
             //检测是不是有updata函数 
         } 
+        //重新设置界面 这个可千万千万不能少 否则会页面显示不适配的问题
+        this.setCanvasWH();
         this.updata(); 
     } 
     /**

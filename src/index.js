@@ -29,6 +29,13 @@ class Demo   {
     create(){ 
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
+        let  BgButton = this.Bg.addComponent('Button'); //给背景图添加上button组件
+        BgButton.addEventClick((e)=>{ 
+            console.log('我是背景:',e) 
+        })
+
+    
+        
         this.Bg.setAnchor(0,0) ;//锚点进行设置
         this.Bg.setDebugTool(true);//显示锚点方便测试
 
@@ -40,18 +47,24 @@ class Demo   {
         //创建一个小人c2 
         this.c2 = this.game.createSprite(650,200,'c2');
         this.c2.setDebugTool(true);//显示锚点方便测试
+        // this.c2.setAnchor(0,0);
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
-        c2Button.addEventDown(()=>{//是用BUTTON上的组件方法
-            console.log('鼠标按下的事件')
-        }).addEventUp(()=>{
-            console.log('鼠标抬起事件');
+        c2Button.addEventDown(()=>{//是用BUTTON上的组件方法 
+            this.c2.setBorderBoxDebugTool(true)
+            c2Button.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
+                let position = e.targetTouches[0] 
+                this.c2.setPosition(position.pageX*2,position.pageY*2)
+            }) 
+         
         }) 
+    
+        
 
         //使用碰撞组件上的相关方法
         c1Collision.collisionTarget(this.c2)//碰撞的目标
             .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件 刚刚碰触一次回调
             .incollision(()=>{console.log('正在重叠')})//三种回调事件 重叠碰触次回调
-            .onEndContact(()=>{console.log('碰撞结束');this.c2.setActive(true)})//三种回调事件 重叠离开碰撞的回调
+            .onEndContact(()=>{console.log('碰撞结束-----');this.c2.setActive(true),c1Collision.removeComponent()})//三种回调事件 重叠离开碰撞的回调
             .DO();//执行碰撞检测事件
         //使用x的DOTween动画
         c1Aniamtion.DOMoveX()//使用x轴移动
@@ -70,10 +83,9 @@ class Demo   {
             .fontTextBaseline('top'); //设置垂直的上下
         //将上面的字体变为c1的子node
         this.c1.addChiled(textChilde); 
-        this.c1.setDebugTool(true);
-        // this.c1.setScale(1.5,1.5);
+        this.c1.setDebugTool(true); 
         //给c1增加一个DOTween动画
-        c1Aniamtion.DOScale().from({x:1,y:1}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
+        c1Aniamtion.DOScale().from(new v2(1,1)).to(new v2(1.5,1.5)).setEase(Ease.Quad.easeInOut)
             .setUseTime(1000)
             .setLoops(2,loopType.pingqang) 
             .setDelayed(0)//动画延时时间
@@ -111,6 +123,7 @@ class Demo   {
         lemonBtn.addEventDown(()=>{//是用BUTTON上的组件方法
             this.lemon.setRotateBy(10);
             this.text1.setRotateBy(10); 
+            console.log('我是柠檬')
         }) 
         //创建出来一把刀子
         this.knifelogo = this.game.createSprite(350,680,'knifelogo');  
@@ -119,7 +132,9 @@ class Demo   {
         //将刀子设为柠檬子node
         this.lemon.addChiled(this.knifelogo);
         //展示当前屏幕的相关信息 像素及其像素比
-        this.game.showCanvasWH(400,50);
+        this.game.showCanvasWH(400,50); 
+
+    
     } 
 
     updata(){
@@ -131,4 +146,10 @@ class Demo   {
     }
 }
 new Demo();
+
+class v2 {
+    constructor(x,y){
+        return {x,y}
+    }
+}
  
