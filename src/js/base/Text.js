@@ -314,7 +314,7 @@ export class Text extends Behaviour{
         this.height = this.fontSizeNumder*this.remscale; 
 
         this.context.restore();
-        this.debugTool();
+        // this.debugTool();
     } 
     //调试工具
     debugTool(){

@@ -2,6 +2,7 @@
 import {Spirit} from './Spirit';
 import {Text} from './Text';
 import {Tool} from './Tool';
+import Button from './Button';
 
 export let gameInfo={
     allImageObjMap:null,//所有图片游戏物体的字典
@@ -32,7 +33,7 @@ export class Game{
         gameInfo.config = config;
         // 设置适配
         // this.setHTML(config); 
-        
+        this.fps = 0;
         //创建字典
         this.creatGameMap(config);
 
@@ -274,8 +275,7 @@ export class Game{
             sprit_.setPosition(positionX,positionY);
             gameInfo.showImageObjMap.set(spriteKey+gameInfo.indexSpritiID,sprit_);
             return sprit_;
-        }
- 
+        } 
     }
 
     /**
@@ -284,17 +284,21 @@ export class Game{
     drawRes(){  
         this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
         this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
+        // this.content.save(); 
         for (let item  of gameInfo.showImageObjMap.entries()) {//渲染所有的图片 
             item[1].drawResObj();
         }
+        // this.content.restore();
+        // this.content.save(); 
         for (let item  of gameInfo.showFontObjMap.entries()) {//渲染所有的字体
             item[1].drawResObj();
         }
+        // this.content.restore();
         for (let item of gameInfo.eventFunMap.entries()) {//自定义的需要帧更新的方法
             item[1]();
         } 
-        this.drawContent.drawImage(this.canvas, 0, 0);
-       
+        // this.content.restore();
+        this.drawContent.drawImage(this.canvas, 0, 0); 
     }
     /**
      * 资源加载完毕之后会会调取这个方法
@@ -305,6 +309,8 @@ export class Game{
             createBack.create();
             //检测是不是有updata函数 
         } 
+        //订阅按钮事件 仅仅订阅一次
+        Button.initBtnEvent();
         //重新设置界面 这个可千万千万不能少 否则会页面显示不适配的问题
         this.setCanvasWH();
         this.updata(); 
@@ -313,6 +319,12 @@ export class Game{
      * 创建updata的振更新
      */
     updata(){ 
+        // this.fps++;
+        // console.log('this.fps:',this.fps)
+        // if(this.fps %7 !== 0){
+        //     return;
+        // }
+        // this.fps = 0;
         if(gameInfo.config.actionScope.updata){ 
             gameInfo.config.actionScope.updata();
         }  
@@ -327,14 +339,16 @@ export class Game{
      * 创建一个字体
      * @param{number} positionX
      * @param{number} positionY
-     * @param{string} textKey
+     * @param{string} textContect
      * @returns{Text} {Text}
      */
     // eslint-disable-next-line consistent-return
-    createFont(positionX,positionY,textKey){
+    createFont(positionX,positionY,textContect){
         gameInfo.indexFontID++;
+        let textKey = `font_${gameInfo.indexFontID}`
         if(gameInfo.showFontObjMap.has(textKey) === false){
-            let font_ = new Text(this.content,null,`F${gameInfo.indexFontID}`);
+            // let 
+            let font_ = new Text(gameInfo.content,textContect,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
             font_.setPosition(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;
@@ -347,13 +361,15 @@ export class Game{
      * 创建静态方法
      * @param positionX
      * @param positionY
-     * @param textKey
+     * @param textContect
      * @returns {Text}
      */
-    static createFontS(positionX,positionY,textKey){
+    static createFontS(positionX,positionY,textContect){
         gameInfo.indexFontID++;
+        let textKey = `font_${gameInfo.indexFontID}`
         if(gameInfo.showFontObjMap.has(textKey) === false){
-            let font_ = new Text(gameInfo.content,null,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
+            // let 
+            let font_ = new Text(gameInfo.content,textContect,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
             font_.setPosition(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
             return font_;

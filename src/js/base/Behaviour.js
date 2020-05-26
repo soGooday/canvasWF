@@ -2,14 +2,19 @@ import game, { Game } from './Game';
 import DOTween from './DOTween';
 import Button from './Button';
 import Collision from './Collision';
+import GameObject from './GameObject';
 
 //可以被添加组件
 let canAddedchiledEnumList=['Spirit','Text'];
 //当前可以使用添加子组件的功能
 let canUseChiledEnumList=['Spirit'];
 //基础类 一些基础组件需要继承自这个
+// export class Behaviour extends GameObject{ 已经将继承来自于GameObject其中写了一些公用数据 transfrom 参考自unity，
+//但是GameObject本身应该进行渲染，而不在是再text与sprirt单独进行渲染。因为还没有写好，所以并没有继承自GameObject 等渲染统一就会添加渲染
+//GameObject的方法
 export class Behaviour {
     constructor(){
+        // super();
         this.TypeName = 'Behaviour'; 
         this.DOTween = null;
         this.Button = null;
@@ -234,7 +239,27 @@ export class Behaviour {
         let rotate = childeObj.rotate - this.rotate;
         childeObj.childeDValue.rotate=rotate;//将差值存放起来  
     } 
-
+ //----------------------------将canvas中的元素坐标与DOM本身坐标对应-----
+    wfPtoDoc(){
+        return {
+            x:this.x,
+            y:this.y,
+            width:this.width,
+            height:this.height,
+        }
+    }
+      /**
+     * 此方法是向外暴漏集合相关参数使用的
+     * 比如 碰撞  按钮点击 需要使用到这些参数
+     */
+    getToolData(){
+        return {
+            x:this.remscale*(this.x - this.img.width*this.anchor.x*this.scaleW),
+            y:this.remscale*(this.y - this.img.height*this.anchor.y*this.scaleH),
+            width:this.width,
+            height:this.height,
+        } 
+    }  
  //----------------------------组件添加移除区---------------------------
     /**
      * 取到当前的具体组件是什么
@@ -266,7 +291,7 @@ export class Behaviour {
             return this.Button = new Button(this); 
 
         }else if(componentName === 'Collision'){
-            return this.Collision = new Collision(this); 
+            return this.Collision = new Collision(this);  
 
         }
       }

@@ -20,10 +20,9 @@ let  OS = {
     pixelRatio: 1,
     webApp: false,
     windows: false,
-    windowsPhone: false
-
+    windowsPhone: false 
 };
-export class Tool {
+export  class Tool {
 
 
     //获取指定区间范围随机数，包括lowerValue<=x<=upperValue
@@ -102,7 +101,18 @@ export class Tool {
             y: y
         };
     };
-
+    static isClick(e,son){
+        //取到相关参数 
+        e.x = e.x;
+        e.y = e.y;  
+        
+        let lfetX_ = son.x+son.width;
+        let rightY_ = son.y+son.height;   
+        if(e.x<=lfetX_ && e.x>=son.x  && e.y<=rightY_ && e.y>=son.y ){
+            return true;
+        }
+        return false; 
+    }
     /**
      * 传入0-1数值 小数
      * @param{float} poXRatio

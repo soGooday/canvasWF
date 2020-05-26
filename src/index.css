@@ -52,11 +52,13 @@ ol {
     list-style-type: none;
 }
 
+
 #demo{
     width: 18.75rem;
     height: 33.375rem;  
+    /* width: 100%;
+    height: 100%;  */
 } 
- 
  
  
  

@@ -113,4 +113,7 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >button
 >>修复之前的按钮点击区域bug,添加touchmove事件，方便制作互动中的鼠标或者手指的拖动物体
 
+### 2020/05/26
+>button
+>>处理按钮事件穿层的问题。目前只处理按钮抬起。后期会添加上按钮按下，与图片的拖动事件
 

@@ -31,34 +31,51 @@ class Demo   {
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
         let  BgButton = this.Bg.addComponent('Button'); //给背景图添加上button组件
         BgButton.addEventClick((e)=>{ 
-            console.log('我是背景:',e) 
+           console.log('我是背景图的点击事件')
+            // let position = e.targetTouches[0] 
+            // // console.log('我是背景:',position.pageX) 
+            // this.c2.setPosition(position.pageX*2,position.pageY*2)
+            // BgButton.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
+            //     // let position = e.targetTouches[0] 
+            //     // console.log('position:',position)
+            //     // this.Bg.setPosition(position.pageX*2,position.pageY*2)
+            //     // console.log('position:',position.pageX*2,position.pageY*2)
+            //     this.c2.setPosition(position.pageX*2,position.pageY*2)
+            // }) 
         })
 
     
         
         this.Bg.setAnchor(0,0) ;//锚点进行设置
         this.Bg.setDebugTool(true);//显示锚点方便测试
-
+        // this.Bg.setActive(false)
         //创建一个小人c1
         this.c1 = this.game.createSprite(0,200,'c1');
         let c1Collision = this.c1.addComponent('Collision');//添加碰撞检测事件
         let c1Aniamtion = this.c1.addComponent('DOTween');//添加DOTween动画
 
         //创建一个小人c2 
-        this.c2 = this.game.createSprite(650,200,'c2');
+        this.c2 = this.game.createSprite(200,765,'c2');
         this.c2.setDebugTool(true);//显示锚点方便测试
         // this.c2.setAnchor(0,0);
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
-        c2Button.addEventDown(()=>{//是用BUTTON上的组件方法 
-            this.c2.setBorderBoxDebugTool(true)
-            c2Button.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
-                let position = e.targetTouches[0] 
-                this.c2.setPosition(position.pageX*2,position.pageY*2)
-            }) 
+        this.c2.setBorderBoxDebugTool(true)
+        c2Button.addEventClick((e)=>{//是用BUTTON上的组件方法 
+            console.log('我是c2的点击事件')
+            // let position = e.targetTouches[0] 
+            // console.log('position:',position.pageX,position.pageY)
+
+            // this.c2.setPosition(position.pageX,position.pageY)
+            // c2Button.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
+            //     let position = e.targetTouches[0] 
+            //     // console.log('position:',position)
+            //     console.log('position:',position.pageX*2,position.pageY*2)
+            //     this.c2.setPosition(position.pageX*2,position.pageY*2)
+            // }) 
          
         }) 
     
-        
+   
 
         //使用碰撞组件上的相关方法
         c1Collision.collisionTarget(this.c2)//碰撞的目标
@@ -76,7 +93,7 @@ class Demo   {
             .DO();//启动动画的执行
         //创建一个字体
         let textChilde = Game.createFontS(0,215,'textChilde')
-            .fontContent("测试位移")//设置字体的内容
+            // .fontContent("测试位移")//设置字体的内容
             .fontSize(60)//设置字体的大小
             .fontTextAlign('center')//设置水平的左右
             .setAnchor(0.5,0.5)
@@ -106,13 +123,13 @@ class Demo   {
         //给字体添加DOTween组件
         let textAnimaiton = text.addComponent('DOTween');
         //使用刚刚添加组件的DOTween动画
-        // textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
-        //     .setUseTime(500)
-        //     .setLoops(2,loopType.pingqang) 
-        //     .setDelayed(0)
-        //     .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
-        //     .everyFrame()//期间的每帧动画的回调
-        //     .DO(); 
+        textAnimaiton.DOScale().from({x:0.5,y:0.5}).to({x:1.5,y:1.5}).setEase(Ease.Quad.easeInOut)
+            .setUseTime(500)
+            .setLoops(2,loopType.pingqang) 
+            .setDelayed(0)
+            .onComplete(()=>{console.log('当前的动画执行完毕了!',  console.log('textChilde.positon:',))})//当前的动画执行完毕的回调
+            .everyFrame()//期间的每帧动画的回调
+            .DO(); 
     
      
         //添加一个柠檬的素材
@@ -134,7 +151,11 @@ class Demo   {
         //展示当前屏幕的相关信息 像素及其像素比
         this.game.showCanvasWH(400,50); 
 
-    
+        const colors = new Set(['white', 'blue', 'red', 'white']);
+
+        for (let color of colors) {
+          console.log(color);
+        }
     } 
 
     updata(){
