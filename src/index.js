@@ -31,17 +31,7 @@ class Demo   {
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
         let  BgButton = this.Bg.addComponent('Button'); //给背景图添加上button组件
         BgButton.addEventClick((e)=>{ 
-           console.log('我是背景图的点击事件')
-            // let position = e.targetTouches[0] 
-            // // console.log('我是背景:',position.pageX) 
-            // this.c2.setPosition(position.pageX*2,position.pageY*2)
-            // BgButton.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
-            //     // let position = e.targetTouches[0] 
-            //     // console.log('position:',position)
-            //     // this.Bg.setPosition(position.pageX*2,position.pageY*2)
-            //     // console.log('position:',position.pageX*2,position.pageY*2)
-            //     this.c2.setPosition(position.pageX*2,position.pageY*2)
-            // }) 
+           console.log('我是背景图的点击事件') 
         })
 
     
@@ -61,17 +51,7 @@ class Demo   {
         let  c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
         this.c2.setBorderBoxDebugTool(true)
         c2Button.addEventClick((e)=>{//是用BUTTON上的组件方法 
-            console.log('我是c2的点击事件')
-            // let position = e.targetTouches[0] 
-            // console.log('position:',position.pageX,position.pageY)
-
-            // this.c2.setPosition(position.pageX,position.pageY)
-            // c2Button.addMoveEvent((e)=>{//是用BUTTON上的组件方法 
-            //     let position = e.targetTouches[0] 
-            //     // console.log('position:',position)
-            //     console.log('position:',position.pageX*2,position.pageY*2)
-            //     this.c2.setPosition(position.pageX*2,position.pageY*2)
-            // }) 
+            console.log('我是c2的点击事件') 
          
         }) 
     
@@ -142,20 +122,23 @@ class Demo   {
             this.text1.setRotateBy(10); 
             console.log('我是柠檬')
         }) 
+
+        //创建一个小人c1  我是页面中被拖动的小人
+        this.c11 = this.game.createSprite(600,900,'c1'); 
+        let  c11Button= this.c11.addComponent('Button'); 
+        c11Button.addMoveEvent(event=>{//是用BUTTON上的组件方法
+            let {x,y} = event.position;
+            this.c11.setPosition(x,y)
+        //    console.log('我是小人11',event.position)
+        }) 
         //创建出来一把刀子
         this.knifelogo = this.game.createSprite(350,680,'knifelogo');  
         //设置刀子的角度  为90  
         this.knifelogo.setRotateTo(90);
-        //将刀子设为柠檬子node
+        //将刀子设为柠檬子节点
         this.lemon.addChiled(this.knifelogo);
         //展示当前屏幕的相关信息 像素及其像素比
         this.game.showCanvasWH(400,50); 
-
-        const colors = new Set(['white', 'blue', 'red', 'white']);
-
-        for (let color of colors) {
-          console.log(color);
-        }
     } 
 
     updata(){
