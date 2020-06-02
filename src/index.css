@@ -45,6 +45,7 @@ body {
     /*iphone6的情况下 font-size 是20px */
     font-size: 14px; 
     overflow: hidden;
+    /* background-color: bisque; */
 }
 
 ul,

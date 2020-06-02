@@ -248,8 +248,7 @@ export class Game{
      * @param spriteKey //取到的精灵的key
      * @returns {Spirit} 返回的是精灵
      */
-    createSprite(positionX,positionY,spriteKey){
-
+    createSprite(positionX,positionY,spriteKey){ 
         if(gameInfo.allImageMap.has(spriteKey) === true){//检测加载好的资源里面是不是存在这个精灵
             gameInfo.indexSpritiID++;//为了防止出现重复的key
             let Iamge_ = gameInfo.allImageMap.get(spriteKey);//取到图片
@@ -265,7 +264,7 @@ export class Game{
      * @param positionX
      * @param positionY
      * @param spriteKey
-     * @returns {*}
+     * @returns {sprit} 返回一张创建好的图片的素材
      */
     static createSpriteS(positionX,positionY,spriteKey){
         if(gameInfo.allImageMap.has(spriteKey) === true){
@@ -282,8 +281,11 @@ export class Game{
      * 遍历图片显示出来  然后调取帧动画进行渲染
      */
     drawRes(){  
-        this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
-        this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
+        // canvas.width = canvas.width; // 一种画布专用的技巧
+        gameInfo.canvas.width = gameInfo.sceneW;
+        gameInfo.drawCanvas.width = gameInfo.sceneW;
+        // this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas
+        // this.drawContent.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清楚画布的canvas 
         // this.content.save(); 
         for (let item  of gameInfo.showImageObjMap.entries()) {//渲染所有的图片 
             item[1].drawResObj();
@@ -419,7 +421,7 @@ export class Game{
      * @param content
      */
     waring(text,content){
-        new Error(gameInfo.waringLogo,text,content);
+        throw new Error(gameInfo.waringLogo,text,content);
 
     }
     /**
@@ -428,8 +430,7 @@ export class Game{
      * @param content
      */
     static waringS(text,content){
-        new Error(gameInfo.waringLogo,text,content);
-
+        throw new Error(gameInfo.waringLogo,text,content); 
     }
 
     /**

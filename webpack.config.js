@@ -82,9 +82,12 @@ module.exports = {
       // contentBase: path.resolve(__dirname, './dist'),
       contentBase: path.resolve(__dirname, './src/'),//这个很关键他是决定打开文件之后从那个页面座位主页面
       host: 'localhost',//服务器IP地址,可以是localhost
-      compress: true,//服务端压缩是否开启
+      // host: "172.16.20.63:9003",
+      // compress: true,//服务端压缩是否开启
       open: true,// 自动打开浏览器
       hot: true ,// 开启热更新 
+      watchContentBase: true
     }
+ 
 
 }

@@ -230,7 +230,8 @@ export class Spirit extends Behaviour{
         this.height = this.img.height*this.remscale*this.scaleH;  
 
         this.context.save(); 
-       
+        // this.x = (this.x).toFixed(2)
+        // this.y = (this.y).toFixed(2)
         let _x = this.x*this.remscale;//算出需要移动的位置
         let _y = this.y*this.remscale  ;//算出需要 
         let _r = this.rotate * Math.PI / 180; 
@@ -242,27 +243,27 @@ export class Spirit extends Behaviour{
         
         // this. showBorderBox();
         //这个是简短的绘制图标的方式
-        // this.context.drawImage(
-        //     this.img,
-        //     this.x*this.remscale,
-        //     this.y*this.remscale,
-        //     this.width,//展示出来图片的宽
-        //     this.height ,//展示出来图片的高
-        // ); 
-        // /这个是可以实现雪碧图的更多绘制的方式
         this.context.drawImage(
             this.img,
-            0,
-            0,
-            this.img.width,
-            this.img.height, 
             this.remscale*(this.x - this.img.width*this.anchor.x*this.scaleW ),
             this.remscale*(this.y - this.img.height*this.anchor.y*this.scaleH ),
-            this.width,
-            this.height
-        );  
+            this.width,//展示出来图片的宽
+            this.height ,//展示出来图片的高
+        ); 
+        // /这个是可以实现雪碧图的更多绘制的方式
+        // this.context.drawImage(
+        //     this.img,
+        //     0,
+        //     0,
+        //     this.img.width,
+        //     this.img.height, 
+        //     this.remscale*(this.x - this.img.width*this.anchor.x*this.scaleW ),
+        //     this.remscale*(this.y - this.img.height*this.anchor.y*this.scaleH ),
+        //     this.width,
+        //     this.height
+        // );  
 
-        this.showBorderBox()
+        // this.showBorderBox()
         this.debugTool(); 
         this.context.restore();
         // this.content.clearRect(0,0,gameInfo.sceneW,gameInfo.sceneH);//清除离屏幕canvas

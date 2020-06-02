@@ -31,11 +31,8 @@ class Demo   {
         this.Bg = this.game.createSprite(0,0,'bg');//创建一个单一游戏体的背景图片
         let  BgButton = this.Bg.addComponent('Button'); //给背景图添加上button组件
         BgButton.addEventClick((e)=>{ 
-           console.log('我是背景图的点击事件') 
-        })
-
-    
-        
+           console.log('我是背景图的点击事件')
+        }) 
         this.Bg.setAnchor(0,0) ;//锚点进行设置
         this.Bg.setDebugTool(true);//显示锚点方便测试
         // this.Bg.setActive(false)
@@ -131,6 +128,10 @@ class Demo   {
             this.c11.setPosition(x,y)
         //    console.log('我是小人11',event.position)
         }) 
+        let c11_title =  Game.createFontS(600,930,'text'); 
+        c11_title.fontContent("我可以被拖动");//设置字体的内容
+        c11_title.fontSize(30).fontColor('#ffffff');//字体的色号
+        this.c11.addChiled(c11_title)
         //创建出来一把刀子
         this.knifelogo = this.game.createSprite(350,680,'knifelogo');  
         //设置刀子的角度  为90  

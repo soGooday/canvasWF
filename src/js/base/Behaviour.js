@@ -2,7 +2,7 @@ import game, { Game } from './Game';
 import DOTween from './DOTween';
 import Button from './Button';
 import Collision from './Collision';
-import GameObject from './GameObject';
+// import GameObject from './GameObject';
 
 //可以被添加组件
 let canAddedchiledEnumList=['Spirit','Text'];
@@ -19,8 +19,7 @@ export class Behaviour {
         this.DOTween = null;
         this.Button = null;
         this.Collision = null;
-        this.childList = [];//子游戏物体的数组
-        // this.configF();
+        this.childList = [];//子游戏物体的数组 
         this.updata();
   
     }
@@ -39,23 +38,35 @@ export class Behaviour {
 
         //检测x数值的变价
         this.setProperty(this,'x',0,(values)=>{ 
-            this.synPositionX();  
+            if(this.isNeedSyn() === true){
+                this.synPositionX();  
+            }
+          
         })
         //检测y数值的变价
         this.setProperty(this,'y',0,(values)=>{ 
-            this.synPositionY(); 
+            if(this.isNeedSyn() === true){
+                this.synPositionY(); 
+            } 
         })
         //检测scaleW数值的变价
         this.setProperty(this,'scaleW',0,(values)=>{ 
-            this.synscaleW(); 
+            if(this.isNeedSyn() === true){
+                this.synscaleW(); 
+            }  
         })
         //检测scaleH数值的变价
         this.setProperty(this,'scaleH',0,(values)=>{ 
-            this.synscaleH(); 
+            if(this.isNeedSyn() === true){
+                this.synscaleH(); 
+            }  
+      
         })  
         //检测rotate数值的变价 从而处理自由物体角度与position
         this.setProperty(this,'rotate',0,(values)=>{  
-            this.synRotate(upDataInit);  
+            if(this.isNeedSyn() === true){
+                this.synRotate(upDataInit); 
+            }   
         }) 
     }
     /**
@@ -68,10 +79,16 @@ export class Behaviour {
     setProperty(obj,parameter,num,BACK){  
         //玩家的当前的金币数量
         Object.defineProperty(this,parameter,{
-            get(){
+            get(){ 
                 return num;
             },
-            set(vlue){ 
+            set(vlue){
+                // console.log(typeof vlue ,vlue)
+                // if(typeof vlue === 'string'){
+                //     vlue = Number(vlue)
+                // }  
+                // num = vlue.toFixed(2);
+                // console.log(num)
                 num = vlue;
                 if(BACK!=null){
                     BACK(vlue);
@@ -127,18 +144,25 @@ export class Behaviour {
     //关于更新子游戏物体的思路
     //当父物体再xy轴上进行移动之时 我们就直接将对应的子物体中进行相应的加减变化值。从而移动子物体（可以不适用锚点）
     //当角度发生变化的时候（再锚点的基础上）
-    //大小的变换
-
+    //大小的变换 
     //第一步先实现 子物体跟随父物体进行移动
     configF(){
         console.log('----console----:',this);
     }
     /**
+     * 是否需要同步
+     */
+    isNeedSyn(){
+        return this.childList.length > 0 ? true :false; 
+    }
+    /**
      * 同步xy坐标
      */
     synPosition(){
-        this.synPositionX();
-        this.synPositionY();
+        for (let index = 0; index < this.childList.length; index++) {
+            this.childList[index].x = this.x + this.childList[index].childeDValue.x;
+            this.childList[index].y = this.y + this.childList[index].childeDValue.y; 
+        } 
     }
      /**
      * 同步x坐标
