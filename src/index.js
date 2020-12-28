@@ -58,7 +58,7 @@ class Demo   {
         c1Collision.collisionTarget(this.c2)//碰撞的目标
             .onBeginContact(()=>{ console.log('相撞了'); this.c2.setActive(false)})//三种回调事件 刚刚碰触一次回调
             .incollision(()=>{console.log('正在重叠')})//三种回调事件 重叠碰触次回调
-            .onEndContact(()=>{console.log('碰撞结束-----');this.c2.setActive(true),c1Collision.removeComponent()})//三种回调事件 重叠离开碰撞的回调
+            .onEndContact(()=>{console.log('碰撞结束,移除碰撞组件');this.c2.setActive(true),c1Collision.removeComponent()})//三种回调事件 重叠离开碰撞的回调
             .DO();//执行碰撞检测事件
         //使用x的DOTween动画
         c1Aniamtion.DOMoveX()//使用x轴移动
