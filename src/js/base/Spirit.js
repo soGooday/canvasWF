@@ -8,10 +8,9 @@ export class Spirit extends Behaviour{
         super();
 
         this.TypeName = 'Spirit';//物体类名字型
-        this.remscale = window.remscale;//缩放的大小参数 
-        this.activeState = true;//画图 
+        this.remscale = window.remscale;//缩放的大小参数  
         this.objectID = ID;
-        this.SpiritKey = ID.split('_')[0]
+        this.SpiritKey = ID.split('_')[0] 
 
 
         //相关的参数
@@ -41,7 +40,7 @@ export class Spirit extends Behaviour{
             a:255,  
         },  
         this.alpha = 1;//透明度  
-
+        this.activeState = true;//画图 
         //本组件的相关参数的设计
         this.initData(context,img,ID);
 
@@ -59,8 +58,7 @@ export class Spirit extends Behaviour{
             },
             isShowBorderBox:false,
         }
-        this.showBorderBox()
-        // console.log('this.assistInfo:',this.assistInfo);
+        this.showBorderBox() 
     }
     /**
      * 初始化相关的信息
