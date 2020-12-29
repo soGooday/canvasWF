@@ -56,6 +56,7 @@ export  class Tool {
         backNum+=this.randomFrom(minNum*10,maxNum*10)/10;
 
         backNum = (Math.random()*(Min-Max) + Max).toFixed(2);
+        return backNum
     }
 
 
@@ -368,4 +369,31 @@ export  class Tool {
             return { e: x, f: y };
         }
     }
+    /**
+     * Normalize this Vector.  向量归一化
+     *
+     * Makes the vector a unit length vector (magnitude of 1) in the same direction.
+     *
+     * @method Phaser.Math.Vector2#normalize
+     * @since 3.0.0
+     *
+     * @return {Phaser.Math.Vector2} This Vector2.
+     */
+    static normalize(obj){
+        let {x,y} = obj;
+        // var x = this.x;
+        // var y = this.y;
+        var len = x * x + y * y;
+ 
+        if (len > 0)
+        {
+            len = 1 / Math.sqrt(len);
+ 
+            x= x * len;
+            y = y * len;
+        }
+ 
+        return {x,y};
+    }
+
 }
