@@ -42,7 +42,7 @@ class Demo {
         let c1Aniamtion = this.c1.addComponent('DOTween');//添加DOTween动画
 
         //创建一个小人c2 
-        this.c2 = this.game.createSprite(200, 765, 'c2');
+        this.c2 = this.game.createSprite(200, 200, 'c2');
         this.c2.setDebugTool(true);//显示锚点方便测试
         // this.c2.setAnchor(0,0);
         let c2Button = this.c2.addComponent('Button'); //给背景图添加上button组件
@@ -101,7 +101,7 @@ class Demo {
             .DO(); //启动动画的执行
         //创建一个字体
         let text = Game.createFontS(357, 500, 'text');
-        text.fontContent("测试位置");//设置字体的内容
+        text.fontContent("测试位置(橘子被点击)");//设置字体的内容
         text.fontSize(60).fontColor('#000000');//字体的色号
         // text.fontTextAlign('center'); //水平的模式
         text.setAnchor(1, 1);//锚点设置为欸右下角

@@ -166,6 +166,8 @@ export class Game{
         gameInfo.sceneW = this.canvas.width;
         gameInfo.sceneH = this.canvas.height;
 
+        console.log('------------:',this.drawCanvas.getBoundingClientRect(),this.canvas.width)
+
         // this.canvas.width = config.width;
         // this.canvas.height = config.height;
 
