@@ -96,7 +96,7 @@ export default class Collision {
         }
         let collisionId = this.getCollisionID(componentInfo.collisionKey);
         this.CollisionUpDataID = collisionId;
-        Game.addUpdataFun(collisionId,()=> { 
+        Game.addUpdataEventFun(collisionId,()=> { 
          let is = componentInfo.self.rectangleCollision(bodyA.getToolData(),bodyB.getToolData());//检测是不是碰撞了 
            if(is){//检测是不是碰撞上了
                 INFO.onBeginContact();
@@ -222,7 +222,7 @@ export default class Collision {
      * 移除碰撞组件
      */
     removeComponent(){ 
-        Game.deleteUpdataFun(this.CollisionUpDataID)
+        Game.deleteUpdataEventFun(this.CollisionUpDataID)
     }
 
 

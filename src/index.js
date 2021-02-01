@@ -27,6 +27,7 @@ class Demo {
         this.game.loadRes(ResList);//将资源列表中的资源添加进来 
     }
     create() {
+        console.log(this)
         //创建一幢背景图的素材
         this.Bg = this.game.createSprite(0, 0, 'bg');//创建一个单一游戏体的背景图片
         let BgButton = this.Bg.addComponent('Button'); //给背景图添加上button组件

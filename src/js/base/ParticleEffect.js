@@ -325,7 +325,7 @@ import {Tool} from './Tool';
 //             }
 //         }
 //         this.TypeName = 'ParticleEffect';
-//         Game.addUpdataFun( this.TypeName,this.updata.bind(this));
+//         Game.addUpdataEventFun( this.TypeName,this.updata.bind(this));
 //     }
 //
 //     /**
@@ -456,14 +456,14 @@ export class ParticleEffect {
 
         // // console.log(config.scale, config.rotate);
         // //设置真更新函数
-        Game.addUpdataFun(this.spritName,this.updata.bind(this));
+        Game.addUpdataEventFun(this.spritName,this.updata.bind(this));
         return this;
     }
 
 
     updata(){ 
         if(this.transfrom.y>=gameInfo.canvas.height || this.transfrom.x>=gameInfo.canvas.width){
-            Game.deleteUpdataFun(this.spritName);//移除本函数
+            Game.deleteUpdataEventFun(this.spritName);//移除本函数
             this.transfrom.destroy();//销毁游戏体
             this.transfrom.setActive(false);
             return;

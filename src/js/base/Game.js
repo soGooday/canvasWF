@@ -9,6 +9,8 @@ export let gameInfo={
     allImageMap:null,//所有图片名字及其加载好的图片
     showImageObjMap:null,//显示在舞台上的图片
     showFontObjMap:null,//显示出来相关的字体
+    createFunMap:null,//创建方法的Map 当一个类中需要初始化的时候，可以调取这个方法
+    updataFunMap:null,//创建方法的实时更新的Map 当一个类型需要更新 一个方法的时候可以使用这个
     showGroupObjSet:null,//专门存放group的set
     eventFunMap:null,//事件方法
     waringLogo:'m( =∩ω∩= )m:',//提示的标题
@@ -31,9 +33,7 @@ export class Game{
     constructor(config){
         this.TypeName = 'Game';
         gameInfo.config = config;
-        // 设置适配
-        // this.setHTML(config); 
-        this.fps = 0;
+        // 设置适配 
         //创建字典
         this.creatGameMap(config);
 
@@ -64,6 +64,8 @@ export class Game{
         gameInfo.allImageMap = new Map();
         gameInfo.showGroupObjSet = new Set();
         gameInfo.eventFunMap = new Map();//事件的方法
+        gameInfo.createFunMap = new Map();//创建事件
+        gameInfo.updataFunMap = new Map();//更新事件
     }
 
 
@@ -166,7 +168,7 @@ export class Game{
         gameInfo.sceneW = this.canvas.width;
         gameInfo.sceneH = this.canvas.height;
 
-        console.log('------------:',this.drawCanvas.getBoundingClientRect(),this.canvas.width)
+        // console.log('------------:',this.drawCanvas.getBoundingClientRect(),this.canvas.width)
 
         // this.canvas.width = config.width;
         // this.canvas.height = config.height;
@@ -301,17 +303,27 @@ export class Game{
         for (let item of gameInfo.eventFunMap.entries()) {//自定义的需要帧更新的方法
             item[1]();
         } 
+        for(let item of gameInfo.updataFunMap.entries()){//执行更新的方法
+            item[0](item[1])();
+        }
         // this.content.restore();
         this.drawContent.drawImage(this.canvas, 0, 0); 
     }
     /**
      * 资源加载完毕之后会会调取这个方法
      */
-    create(){ 
-        if(gameInfo.config.actionScope.create){
-            let createBack = gameInfo.config.actionScope;
-            createBack.create();
-            //检测是不是有updata函数 
+    create(){  
+        let className,funName;//objact的名字与方法的名字
+        //将create方法 放到 addCreate 方法中
+        if(gameInfo.config.actionScope.create){ 
+            Game.addCreateFun(gameInfo.config.actionScope,'create')
+        }   
+        //遍历执行
+        for (const item of gameInfo.createFunMap.entries()) {//自定义的需要帧更新的方法
+            className = item[0];
+            funName = item[1];
+            if(className && funName && className[funName]) className[funName]()
+            
         } 
         //订阅按钮事件 仅仅订阅一次
         Button.initBtnEvent();
@@ -322,13 +334,7 @@ export class Game{
     /**
      * 创建updata的振更新
      */
-    updata(){ 
-        // this.fps++;
-        // console.log('this.fps:',this.fps)
-        // if(this.fps %7 !== 0){
-        //     return;
-        // }
-        // this.fps = 0;
+    updata(){  
         if(gameInfo.config.actionScope.updata){ 
             gameInfo.config.actionScope.updata();
         }  
@@ -371,8 +377,7 @@ export class Game{
     static createFontS(positionX,positionY,textContect){
         gameInfo.indexFontID++;
         let textKey = `font_${gameInfo.indexFontID}`
-        if(gameInfo.showFontObjMap.has(textKey) === false){
-            // let 
+        if(gameInfo.showFontObjMap.has(textKey) === false){ 
             let font_ = new Text(gameInfo.content,textContect,`F${gameInfo.indexFontID}`);//gameInfo.content使用的是这个   而不是this.context
             font_.setPosition(positionX,positionY);
             gameInfo.showFontObjMap.set(textKey,font_);
@@ -380,20 +385,60 @@ export class Game{
         }
         this.waring(null,`使用createFont方法添加字体，已经存在了这个fontKsy: ${textKey}   请更换!`);
 
+    } 
+    /**
+     * 放入创建的方法  是一个objact 会自动调取objact中的create方法 如果没有则会跳过不执行
+     * @param {object} actionScope 传入objact
+     * @param {string} funName  要执行的方法
+     */
+    static addCreateFun(actionScope,funName){
+        //不存在这个方法
+        if(!gameInfo.createFunMap.has(actionScope)){
+            gameInfo.createFunMap.set(actionScope,funName);
+        }else{
+            console.warn(`addCreat中已经添加过了${funName}方法了,你可以将方法放在${gameInfo.createFunMap.get(actionScope)}中执行`)
+        }
     }
+    /**
+     * 删除添加的帧更新的方法
+     * @param {object} actionScope  
+     */
+    static deleteCreateFun(actionScope){
+        gameInfo.createFunMap.delete(actionScope); 
+    } 
+    /**
+     * 添加执行obj
+     * @param {objact} actionScope  传入objact
+     * @param {string} funName  要执行的方法
+     */
+    addUpdataFun(actionScope,funName){ 
+        if(!gameInfo.updataFunMap.has(actionScope)){
+            gameInfo.updataFunMap.set(actionScope,funName);
+        }else{
+            console.warn(`addCreat中已经添加过了${funName}方法了,你可以将方法放在${gameInfo.updataFunMap.get(actionScope)}中执行`)
+        }
+    } 
+    /**
+     * 删除添加的帧更新的方法
+     * @param {object} actionScope  
+     */
+    static deleteUpdataFun(actionScope){
+        gameInfo.updataFunMap.delete(actionScope); 
+    }  
+
    /**
    * 添加帧更新
    * @param {string} nameFun  更新函数的唯一标识
    * @param {function} fun 添加帧更新函数
    */
-    static addUpdataFun(nameFun,fun){
+    static addUpdataEventFun(nameFun,fun){
         gameInfo.eventFunMap.set(nameFun,fun);
     }
     /**
      * 删除添加的帧更新的方法
      * @param {string} nameFun 
      */
-    static deleteUpdataFun(nameFun){
+    static deleteUpdataEventFun(nameFun){
         gameInfo.eventFunMap.delete(nameFun); 
     }
 

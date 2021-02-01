@@ -281,7 +281,7 @@ export default class DOTween {
         //开始延时函数
         setTimeout(()=>{
             //开始动画逻辑
-            Game.addUpdataFun(_animationID,()=>{  
+            Game.addUpdataEventFun(_animationID,()=>{  
                 // 当前的运动位置
                 let value = easeFun(startNum, from, to - from, useTimeNum); 
                 // 时间递增
@@ -301,7 +301,7 @@ export default class DOTween {
                     if(loopsNum>0){//判断是不是有指定的次数 
                         // 检查是不是到达了指定的次数了
                         if(_loopsNum>=loopsNum){//次数到了就将循环剔除
-                            Game.deleteUpdataFun(_animationID);  
+                            Game.deleteUpdataEventFun(_animationID);  
                         }else{
                             startNum = 0;//从新开始动画
                         }
