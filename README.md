@@ -121,3 +121,6 @@ csdn地址:<https://blog.csdn.net/huhudeni/article/details/104090288>
 >button
 >>处理按钮事件穿层的问题。添加上按钮按下，与图片的拖动事件，按钮事件基本完成
 
+### 2022/12/10
+>依赖修改
+>> "node-sass": "^4.12.0", sass-loader": "^8.0.0", 改为 "sass": "^1.43.2", "sass-loader": "^9.0.2", 否则安装依赖容易失败
